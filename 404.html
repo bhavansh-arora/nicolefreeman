@@ -32,10 +32,9 @@
   <link rel="preload" href="assets/fonts/fraunces-italic.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/geist-mono-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="assets/css/fonts.css?v=45e65c94">
-  <link rel="stylesheet" href="assets/css/main.css?v=900774d6">
-  <script>
-    (function(d){d.classList.add('js');var rm=matchMedia('(prefers-reduced-motion: reduce)').matches;function ink(){d.classList.add('ui-ink');var m=document.querySelector('meta[name=theme-color]');if(m)m.setAttribute('content','#0a1a1d')}try{var pt=sessionStorage.getItem('nf_pt');if(pt||d.classList.contains('no-preloader')||sessionStorage.getItem('nf_seen')||rm)d.classList.add('no-preloader');else{ink();d.classList.add('is-preloading')}sessionStorage.setItem('nf_seen','1');if(pt&&!rm){d.style.backgroundColor='#0a1a1d';d.classList.add('pt-enter');ink();sessionStorage.removeItem('nf_pt');setTimeout(function(){d.classList.remove('pt-enter','ui-ink');d.style.backgroundColor=''},3200)}}catch(e){}})(document.documentElement);
-  </script>
+  <link rel="stylesheet" href="assets/css/main.css?v=0de9bd33">
+  <script>document.documentElement.classList.add('js');</script>
+  <script type="speculationrules">{"prefetch":[{"where":{"href_matches":"/*.html"},"eagerness":"moderate"}]}</script>
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -55,28 +54,6 @@
 </head>
 <body data-page="">
   <a class="skip-link" href="#main">Skip to content</a>
-
-  <div class="preloader" aria-hidden="true">
-    <div class="preloader__glow"></div>
-    <div class="preloader__top"><span class="preloader__brand"><svg class="mark" viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="11" fill="currentColor"/><path class="mark__tri" d="M10.5 20 27.5 10.2v19.6z"/></svg> Nicole Freeman</span><span>Coaching · London &amp; Zoom</span></div>
-    <div class="preloader__words">
-      <span class="pw"><span>Ditch</span></span>
-      <span class="pw"><span>the</span></span>
-      <span class="pw pw--x"><span><em>doubt.</em><i class="pw__strike"></i></span></span>
-    </div>
-    <div class="preloader__bottom"><span>You don't have to be perfect to be amazing</span><span class="preloader__count">00</span></div>
-  </div>
-
-  <div class="curtain" aria-hidden="true">
-    <div class="curtain__layer curtain__layer--fizz"></div>
-    <div class="curtain__layer curtain__layer--ink">
-      <div class="curtain__label">
-        <span class="curtain__kick"><svg class="mark" viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="11" fill="currentColor"/><path class="mark__tri" d="M10.5 20 27.5 10.2v19.6z"/></svg> Nicole Freeman · Coaching</span>
-        <span class="curtain__title">Ditch the <em>doubt</em></span>
-        <span class="curtain__bar"><i></i></span>
-      </div>
-    </div>
-  </div>
 
   <header class="site-header">
     <div class="header-bar">
@@ -103,7 +80,7 @@
   </header>
 
   <div class="menu-backdrop" aria-hidden="true"></div>
-  <div class="menu" id="site-menu" inert data-lenis-prevent>
+  <div class="menu" id="site-menu" inert>
     <div class="menu__inner">
       <ul class="menu__list">
         <li><a href="index.html" ><span>01</span><b>Home</b></a></li>
@@ -130,7 +107,7 @@
   </div>
 
 
-  <main id="main" data-theme-color="#0a1a1d">
+  <main id="main">
 
     <section class="page-hero page-hero--ink nf">
       <div class="page-hero__frame grain" data-theme="dark">
@@ -154,7 +131,7 @@
       <div class="footer__top">
         <div class="footer__lead">
           <p class="eyebrow eyebrow--light"><i></i> Let's chat</p>
-          <a class="footer__big" href="contact.html" data-cursor="Say hi">Ready when <em>you are.</em><svg class="i-ur" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
+          <a class="footer__big" href="contact.html">Ready when <em>you are.</em><svg class="i-ur" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
         </div>
         <div class="footer__contact">
           <a href="tel:+447976268520"><small>Call or WhatsApp</small>+44 7976 268 520</a>
@@ -216,11 +193,7 @@
   </footer>
 
 
-  <script src="assets/vendor/gsap.min.js?v=47da594c" defer></script>
-  <script src="assets/vendor/ScrollTrigger.min.js?v=ba1fa78e" defer></script>
-  <script src="assets/vendor/lenis.min.js?v=79e3a064" defer></script>
   <script src="assets/js/config.js?v=595e6c25" defer></script>
-  <script src="assets/js/site.js?v=e576a351" defer></script>
-  <script src="assets/js/motion.js?v=e634c27f" defer></script>
+  <script src="assets/js/site.js?v=2e381e3f" defer></script>
 </body>
 </html>

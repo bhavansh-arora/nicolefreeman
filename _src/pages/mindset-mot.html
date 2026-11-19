@@ -12,12 +12,12 @@
             <h1 class="page-hero__title">Your free <em>Mindset MOT.</em></h1>
             <p class="page-hero__lead">Thinking about coaching? Start here. One hour, on the house. I'll show you where you're stuck, and you'll leave with an insight, tip or tool: the first stepping stone to move you forward.</p>
             <div class="btn-row page-hero__actions" style="margin-top:32px">
-              <a class="btn btn--ink btn--lg" href="#book" data-magnetic><span class="btn__label">Pick a time</span><span class="btn__icon">{{icon:calendar}}</span></a>
+              <a class="btn btn--ink btn--lg" href="#book"><span class="btn__label">Pick a time</span><span class="btn__icon">{{icon:calendar}}</span></a>
               <a class="btn btn--ghost-ink btn--lg" href="#check"><span class="btn__label">60-second self-check</span><span class="btn__icon">{{icon:gauge}}</span></a>
             </div>
           </div>
           <div class="page-hero__media">
-            <div class="mot-gauge" data-rot="-2" data-theme="dark">
+            <div class="mot-gauge" data-theme="dark" style="--r:-2deg">
               <div class="mot-gauge__top"><span>Mindset MOT</span><span>Live reading</span></div>
               <svg viewBox="0 0 320 190" aria-hidden="true">
                 <defs><linearGradient id="gGrad2" x1="0" x2="1"><stop offset="0" stop-color="#ff4f79"/><stop offset=".5" stop-color="#ffc83d"/><stop offset="1" stop-color="#45d3cf"/></linearGradient></defs>
@@ -31,7 +31,7 @@
               </svg>
               <div class="mot-gauge__read"><b>60 <em>min</em></b><small>to see where you are, and where you could be</small></div>
             </div>
-            <div class="float-card" data-rot="4" style="left:-30px;top:-34px"><span class="float-card__ico float-card__ico--teal">{{icon:heart}}</span><span><b>Complimentary</b><small>No pressure, no hard sell</small></span></div>
+            <div class="float-card" style="--r:4deg;left:-30px;top:-34px"><span class="float-card__ico float-card__ico--teal">{{icon:heart}}</span><span><b>Complimentary</b><small>No pressure, no hard sell</small></span></div>
           </div>
         </div>
         <div class="page-hero__bottom">
@@ -189,13 +189,22 @@
           </div>
           <div class="booking__box" data-tidycal>
             <div class="booking__embed"></div>
-            <div class="booking__skel" aria-hidden="true">
-              <small>Loading Nicole's calendar</small>
-              <b>Mindset MOT · 60 minutes</b>
-              <div class="skel-row"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
-              <div class="skel-row"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
-              <div class="skel-row"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
-              <div class="skel-row"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+            <div class="booking__skel">
+              <small>Nicole's live calendar</small>
+              <b>Mindset MOT · 60 minutes · Free</b>
+              <p class="booking__note">Pick a day and time that suits you. You'll get a confirmation straight away.</p>
+              <div class="skel-cal" aria-hidden="true">
+                <div class="skel-row skel-row--days"><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span></div>
+                <div class="skel-row"><i></i><i class="on"></i><i></i><i class="on"></i><i></i><i></i><i></i></div>
+                <div class="skel-row"><i class="on"></i><i></i><i class="on"></i><i></i><i class="on"></i><i></i><i></i></div>
+                <div class="skel-row"><i></i><i class="on"></i><i></i><i class="on"></i><i></i><i></i><i></i></div>
+                <div class="skel-row"><i class="on"></i><i></i><i class="on"></i><i class="on"></i><i></i><i></i><i></i></div>
+              </div>
+              <div class="booking__actions">
+                <button class="btn btn--fizz btn--lg" type="button" data-load-calendar><span class="btn__label">Show available times</span><span class="btn__icon">{{icon:calendar}}</span></button>
+                <a class="link-arrow" href="https://tidycal.com/nicolefreeman/mindset-mot" target="_blank" rel="noopener">Open in a new tab {{icon:arrow-ur}}</a>
+              </div>
+              <p class="booking__loading" role="status">Loading Nicole's calendar…</p>
               <div class="booking__fallback">The calendar didn't load here. <a class="link-arrow" href="https://tidycal.com/nicolefreeman/mindset-mot" target="_blank" rel="noopener">Open the booking page {{icon:arrow-ur}}</a></div>
             </div>
           </div>

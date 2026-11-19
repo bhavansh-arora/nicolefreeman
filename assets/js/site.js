@@ -1,8 +1,9 @@
 /* ==========================================================================
    Nicole Freeman Coaching — interface behaviour
-   Global (once): smooth scroll, header, menu, cursor, preloader and in-place
-   page transitions. Per page: initPage(root) wires up everything inside
-   <main>; it runs on load and again after every in-place page swap.
+   Deliberately simple: native scrolling, normal page loads, and small
+   reveal effects that only ever start from content that is already there.
+   Nothing on the page is hidden unless this script is running and has
+   already decided when to show it.
    ========================================================================== */
 (function () {
   "use strict";
@@ -11,8 +12,6 @@
   var doc = document.documentElement;
   var body = document.body;
   var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  var finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
-  if (reduced) doc.classList.add("reduced");
 
   var $ = function (s, c) { return (c || document).querySelector(s); };
   var $$ = function (s, c) { return Array.prototype.slice.call((c || document).querySelectorAll(s)); };
@@ -21,40 +20,19 @@
     set: function (k, v) { try { window.sessionStorage.setItem(k, v); } catch (e) { /* storage unavailable */ } },
     del: function (k) { try { window.sessionStorage.removeItem(k); } catch (e) { /* storage unavailable */ } }
   };
-  if ("scrollRestoration" in history) history.scrollRestoration = "manual";
 
-  /* Per-page cleanup hooks (timers, observers, rAF loops) */
-  var cleanups = [];
-  function onCleanup(fn) { cleanups.push(fn); }
-  function runCleanups() { cleanups.splice(0).forEach(function (fn) { try { fn(); } catch (e) { /* ignore */ } }); }
-  function every(fn, ms) { var id = setInterval(fn, ms); onCleanup(function () { clearInterval(id); }); return id; }
-  function later(fn, ms) { var id = setTimeout(fn, ms); onCleanup(function () { clearTimeout(id); }); return id; }
+  /* Small helpers (kept for the widgets below) */
+  function onCleanup() { /* single-page lifetime: nothing to tear down */ }
+  function every(fn, ms) { return setInterval(fn, ms); }
+  function later(fn, ms) { return setTimeout(fn, ms); }
   function inView(el, cb, opts) {
     if (!("IntersectionObserver" in window)) { cb(true); return; }
     var io = new IntersectionObserver(function (entries) { entries.forEach(function (e) { cb(e.isIntersecting, e); }); }, opts || { threshold: 0.2 });
     io.observe(el);
-    onCleanup(function () { io.disconnect(); });
-  }
-
-  /* ---------- Smooth scroll (Lenis) ---------- */
-  var lenis = null;
-  if (!reduced && window.Lenis) {
-    /* lerp-based smoothing follows the wheel/trackpad closely (no floaty lag) */
-    lenis = new window.Lenis({ lerp: 0.12, smoothWheel: true, wheelMultiplier: 1 });
-    window.lenis = lenis;
-    if (!window.gsap) {
-      var raf = function (time) { lenis.raf(time); requestAnimationFrame(raf); };
-      requestAnimationFrame(raf);
-    }
   }
   function scrollToEl(target, offset) {
-    var off = offset == null ? -96 : offset;
-    if (lenis) lenis.scrollTo(target, { offset: off, duration: 1.4 });
-    else window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY + off, behavior: reduced ? "auto" : "smooth" });
-  }
-  function jumpTop() {
-    if (lenis) lenis.scrollTo(0, { immediate: true, force: true });
-    window.scrollTo(0, 0);
+    var top = target.getBoundingClientRect().top + window.scrollY + (offset == null ? -100 : offset);
+    window.scrollTo({ top: Math.max(0, top), behavior: reduced ? "auto" : "smooth" });
   }
 
   /* ---------- Booking links ---------- */
@@ -69,444 +47,160 @@
   wireBooking(document);
   $$("[data-year]").forEach(function (el) { el.textContent = new Date().getFullYear(); });
 
-  /* ---------- Header ---------- */
+  /* ---------- Header: a soft shadow once the page has scrolled ---------- */
   var header = $(".site-header");
-  var lastY = window.scrollY;
-  var ticking = false;
-  /* Which theme is under the header? Section positions are measured once
-     (and again only when the layout changes), so scrolling never forces
-     the browser to recalculate layout. */
-  var zones = [], headerMid = 50, zonesDirty = true;
-  function measureZones() {
-    zonesDirty = false;
-    if (!header) return;
-    var bar = header.querySelector(".header-bar");
-    headerMid = bar ? bar.offsetTop + header.offsetTop + bar.offsetHeight / 2 : 50;
-    var y = window.scrollY;
-    zones = $$("main [data-theme], .site-footer[data-theme]").map(function (el) {
-      var r = el.getBoundingClientRect();
-      return { top: r.top + y, bottom: r.bottom + y, left: r.left, right: r.right, dark: el.getAttribute("data-theme") === "dark" };
-    });
-  }
-  function darkUnderHeader() {
-    if (zonesDirty) measureZones();
-    var y = window.scrollY + headerMid, x = window.innerWidth / 2, dark = false;
-    /* DOM order: later (nested) zones override their parents */
-    for (var i = 0; i < zones.length; i++) {
-      var z = zones[i];
-      if (y >= z.top && y <= z.bottom && x >= z.left && x <= z.right) dark = z.dark;
-    }
-    return dark;
-  }
-  function invalidateZones() { zonesDirty = true; requestAnimationFrame(onScroll); }
-  window.addEventListener("load", invalidateZones);
-  if ("ResizeObserver" in window) new ResizeObserver(invalidateZones).observe(body);
+  var scrolled = null;
   function onScroll() {
-    var y = window.scrollY;
-    if (header) {
-      header.classList.toggle("is-scrolled", y > 40);
-      var goingDown = y > lastY && y > 420;
-      if (!body.classList.contains("menu-open")) header.classList.toggle("is-hidden", goingDown);
-      header.classList.toggle("on-dark", darkUnderHeader());
-    }
-    lastY = y;
-    ticking = false;
+    var s = window.scrollY > 24;
+    if (s !== scrolled && header) { scrolled = s; header.classList.toggle("is-scrolled", s); }
   }
-  window.addEventListener("scroll", function () {
-    if (!ticking) { requestAnimationFrame(onScroll); ticking = true; }
-  }, { passive: true });
-  window.addEventListener("resize", invalidateZones);
+  window.addEventListener("scroll", onScroll, { passive: true });
   onScroll();
 
-  /* ---------- Menu ---------- */
+  /* ---------- Menu (phones and tablets) ---------- */
   var toggle = $(".menu-toggle");
   var toggleText = $(".menu-toggle__text");
   var menu = $(".menu");
   function openMenu() {
     body.classList.add("menu-open");
+    doc.classList.add("no-scroll");
     if (toggle) toggle.setAttribute("aria-expanded", "true");
     if (toggleText) toggleText.textContent = "Close";
-    if (lenis) lenis.stop();
     if (menu) menu.removeAttribute("inert");
-    if (header) header.classList.remove("is-hidden");
   }
-  function closeMenu(instant) {
+  function closeMenu() {
     if (!body.classList.contains("menu-open")) return;
-    if (instant && menu) menu.classList.add("no-anim");
     body.classList.remove("menu-open");
+    doc.classList.remove("no-scroll");
     if (toggle) toggle.setAttribute("aria-expanded", "false");
     if (toggleText) toggleText.textContent = "Menu";
-    if (lenis) lenis.start();
     if (menu) menu.setAttribute("inert", "");
-    if (instant && menu) requestAnimationFrame(function () { requestAnimationFrame(function () { menu.classList.remove("no-anim"); }); });
   }
   if (toggle) toggle.addEventListener("click", function () { body.classList.contains("menu-open") ? closeMenu() : openMenu(); });
   var backdrop = $(".menu-backdrop");
-  if (backdrop) backdrop.addEventListener("click", function () { closeMenu(); });
+  if (backdrop) backdrop.addEventListener("click", closeMenu);
   document.addEventListener("keydown", function (e) { if (e.key === "Escape") closeMenu(); });
-  window.addEventListener("resize", function () { if (window.innerWidth > 1100) closeMenu(true); });
-
-  /* ---------- Browser chrome colour ---------- */
-  var themeMeta = $('meta[name="theme-color"]');
-  function uiInk() { doc.classList.add("ui-ink"); if (themeMeta) themeMeta.setAttribute("content", "#0a1a1d"); }
-  function uiCream() { doc.classList.remove("ui-ink"); if (themeMeta) themeMeta.setAttribute("content", "#f6f1e9"); }
-
-  /* ---------- Preloader (first visit per session) ---------- */
-  var pre = $(".preloader");
-  if (pre) {
-    if (doc.classList.contains("no-preloader") || reduced) {
-      if (!doc.classList.contains("pt-enter")) uiCream();
-      doc.classList.remove("is-preloading");
-      pre.remove();
-      body.classList.add("is-loaded");
-    } else {
-      var count = $(".preloader__count", pre);
-      var words = $$(".pw > span", pre);
-      var start = performance.now();
-      var DURATION = 1300;
-      words.forEach(function (w, i) {
-        w.style.transition = "transform 1s cubic-bezier(.22,1,.36,1) " + (0.1 * i + 0.1) + "s";
-        requestAnimationFrame(function () { requestAnimationFrame(function () { w.style.transform = "translateY(0)"; }); });
-      });
-      setTimeout(function () { pre.classList.add("is-strike"); }, 720);
-      var tick = function (now) {
-        var p = Math.min(1, (now - start) / DURATION);
-        var eased = 1 - Math.pow(1 - p, 3);
-        if (count) count.textContent = String(Math.round(eased * 100)).padStart(2, "0");
-        if (p < 1) requestAnimationFrame(tick);
-        else finishPreloader();
-      };
-      requestAnimationFrame(tick);
-    }
-  } else {
-    body.classList.add("is-loaded");
-  }
-  function finishPreloader() {
-    pre.style.transition = "clip-path 1.05s cubic-bezier(.65,0,.35,1)";
-    pre.style.clipPath = "inset(0 0 100% 0 round 0 0 40px 40px)";
-    doc.classList.remove("is-preloading");
-    setTimeout(uiCream, 500);
-    body.classList.add("is-loaded");
-    document.dispatchEvent(new CustomEvent("site:loaded"));
-    setTimeout(function () { pre.remove(); }, 1150);
-  }
-
-  /* ---------- Cursor (dot + trailing ring) ---------- */
-  if (finePointer && !reduced) {
-    doc.classList.add("has-cursor");
-    var cursor = document.createElement("div");
-    cursor.className = "cursor";
-    cursor.setAttribute("aria-hidden", "true");
-    cursor.innerHTML = '<div class="cursor__dot"></div><div class="cursor__ring"><span></span></div>';
-    body.appendChild(cursor);
-    var dot = $(".cursor__dot", cursor), ring = $(".cursor__ring", cursor), label = $("span", ring);
-    var mx = -100, my = -100, rx = -100, ry = -100, running = false;
-    /* The loop only runs while the ring is catching up, then sleeps */
-    function loop() {
-      rx += (mx - rx) * 0.2; ry += (my - ry) * 0.2;
-      dot.style.transform = "translate3d(" + mx + "px," + my + "px,0)";
-      ring.style.transform = "translate3d(" + rx + "px," + ry + "px,0)";
-      if (Math.abs(mx - rx) + Math.abs(my - ry) > 0.3) requestAnimationFrame(loop);
-      else running = false;
-    }
-    window.addEventListener("mousemove", function (e) {
-      mx = e.clientX; my = e.clientY;
-      if (!running) { running = true; requestAnimationFrame(loop); }
-    }, { passive: true });
-    document.addEventListener("mouseover", function (e) {
-      var t = e.target.closest("[data-cursor], a, button, label, .opt, input[type=range], summary, .fact");
-      cursor.classList.remove("is-hover", "is-label");
-      var dark = e.target.closest("[data-theme]");
-      cursor.classList.toggle("on-dark", (dark && dark.getAttribute("data-theme") === "dark") || body.classList.contains("menu-open"));
-      if (!t) return;
-      var txt = t.getAttribute("data-cursor");
-      if (txt) { label.textContent = txt; cursor.classList.add("is-label"); }
-      else cursor.classList.add("is-hover");
-    });
-    document.addEventListener("mouseleave", function () { cursor.style.opacity = "0"; });
-    document.addEventListener("mouseenter", function () { cursor.style.opacity = "1"; });
-  }
+  window.addEventListener("resize", function () { if (window.innerWidth > 1100) closeMenu(); });
+  /* In-page links inside the menu: close it first */
+  if (menu) menu.addEventListener("click", function (e) { if (e.target.closest("a")) closeMenu(); });
+  /* Coming back with the back button (page restored from cache): reset UI */
+  window.addEventListener("pageshow", function (e) { if (e.persisted) closeMenu(); });
 
   /* ==========================================================================
-     IN-PLACE PAGE TRANSITIONS
-     Two panels cover the screen, the next page's <main> is fetched and
-     swapped in behind them, then they lift. The document never reloads,
-     so there is no white flash or toolbar jump on iOS.
+     REVEALS
+     One IntersectionObserver adds .is-in as things come into view. Anything
+     already on screen when the page loads is marked .is-in straight away,
+     so it is never hidden. Without this script, nothing is hidden at all.
      ========================================================================== */
-  var curtain = $(".curtain");
-  var ctTitle = curtain ? $(".curtain__title", curtain) : null;
-  var PAGE_TITLES = {
-    "index": "Ditch the <em>doubt</em>", "": "Ditch the <em>doubt</em>",
-    "about": "Meet <em>Nicole</em>", "coaching": "Coaching <em>&amp; hypnotherapy</em>",
-    "mindset-mot": "Your Mindset <em>MOT</em>", "supervision": "Supervision <em>&amp; teams</em>",
-    "kind-words": "Kind <em>words</em>", "contact": "Let's <em>chat</em>", "404": "Wrong <em>turn</em>"
-  };
-  function titleFor(path) {
-    var key = (path.split("/").pop() || "").replace(/\.html$/, "");
-    return PAGE_TITLES[key] || "Nicole <em>Freeman</em>";
-  }
-  function resetCurtain() {
-    if (!curtain) return;
-    curtain.classList.add("no-anim");
-    doc.classList.remove("pt-enter", "pt-covered");
-    curtain.classList.remove("is-leaving", "is-covering", "is-covered");
-    doc.style.backgroundColor = "";
-    uiCream();
-    void curtain.offsetHeight;
-    requestAnimationFrame(function () { requestAnimationFrame(function () { curtain.classList.remove("no-anim"); }); });
-  }
-  function liftCurtain() {
-    if (!curtain) return;
-    curtain.classList.add("no-anim");
-    doc.classList.add("pt-enter");
-    curtain.classList.remove("is-covering", "is-covered");
-    void curtain.offsetHeight;
-    curtain.classList.remove("no-anim");
-    requestAnimationFrame(function () { requestAnimationFrame(function () {
-      doc.classList.remove("pt-covered");
-      curtain.classList.add("is-leaving");
-      setTimeout(resetCurtain, 1050);
-    }); });
-  }
-  if (curtain && doc.classList.contains("pt-enter")) {
-    if (ctTitle) ctTitle.innerHTML = titleFor(location.pathname);
-    requestAnimationFrame(function () { requestAnimationFrame(function () {
-      curtain.classList.add("is-leaving");
-      setTimeout(resetCurtain, 1050);
-    }); });
-  }
-
-  var pageCache = {};
-  function fetchPage(path) {
-    if (!pageCache[path]) {
-      pageCache[path] = fetch(path, { credentials: "same-origin" }).then(function (r) {
-        if (!r.ok && r.status !== 404) throw new Error("HTTP " + r.status);
-        return r.text();
-      }).catch(function (err) { delete pageCache[path]; throw err; });
-    }
-    return pageCache[path];
-  }
-  function isPageLink(url) {
-    return url.origin === location.origin && (/\.html$/.test(url.pathname) || /\/$/.test(url.pathname));
-  }
-  function cover(path) {
-    return new Promise(function (resolve) {
-      if (ctTitle) ctTitle.innerHTML = titleFor(path);
-      curtain.classList.add("is-covering");
-      setTimeout(uiInk, 300);
-      var done = false;
-      var fin = function () {
-        if (done) return; done = true;
-        curtain.classList.add("is-covered"); doc.classList.add("pt-covered");
-        setTimeout(resolve, 160);
-      };
-      var ink = $(".curtain__layer--ink", curtain);
-      if (ink) ink.addEventListener("transitionend", function (ev) { if (ev.propertyName === "transform") fin(); }, { once: true });
-      setTimeout(fin, 1000);
-    });
-  }
-  var navigating = false;
-  function navigate(url, push) {
-    if (navigating) return;
-    navigating = true;
-    Promise.all([fetchPage(url.pathname), cover(url.pathname)]).then(function (res) {
-      swapPage(res[0], url, push);
-      navigating = false;
-    }).catch(function () {
-      try { sessionStorage.setItem("nf_pt", "1"); } catch (e) { /* ignore */ }
-      location.href = url.href;
-    });
-  }
-  function swapPage(html, url, push) {
-    var next = new DOMParser().parseFromString(html, "text/html");
-    var newMain = next.querySelector("main");
-    if (!newMain) { location.href = url.href; return; }
-    if (window.NFMotion) window.NFMotion.destroy();
-    runCleanups();
-    closeMenu(true);
-    var oldMain = $("main");
-    oldMain.replaceWith(document.importNode(newMain, true));
-    document.title = next.title;
-    ["description"].forEach(function (n) {
-      var a = $('meta[name="' + n + '"]'), b = next.querySelector('meta[name="' + n + '"]');
-      if (a && b) a.setAttribute("content", b.getAttribute("content"));
-    });
-    var canon = $('link[rel="canonical"]'), nCanon = next.querySelector('link[rel="canonical"]');
-    if (canon && nCanon) canon.setAttribute("href", nCanon.getAttribute("href"));
-    body.setAttribute("data-page", next.body.getAttribute("data-page") || "");
-    [".site-header .nav", ".menu__list"].forEach(function (sel) {
-      var a = $(sel), b = next.querySelector(sel);
-      if (a && b) a.innerHTML = b.innerHTML;
-    });
-    if (push) history.pushState({ nf: 1 }, "", url.href);
-    jumpTop();
-    if (header) header.classList.remove("is-hidden");
-    var main = $("main");
-    wireBooking(main);
-    initPage(main);
-    if (window.NFMotion) window.NFMotion.init(main, "enter");
-    zonesDirty = true;
-    lastY = 0; onScroll();
-    if (url.hash) {
-      var t = document.getElementById(url.hash.slice(1));
-      if (t) setTimeout(function () { scrollToEl(t); }, 850);
-    }
-    liftCurtain();
-  }
-  document.addEventListener("click", function (e) {
-    var a = e.target.closest("a[href]");
-    if (!a || e.defaultPrevented || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
-    if (a.target && a.target !== "_self") return;
-    var href = a.getAttribute("href");
-    if (!href || /^(mailto:|tel:|javascript:)/i.test(href)) return;
-    if (href.charAt(0) === "#") {
-      if (href.length < 2) return;
-      var target = document.querySelector(href);
-      if (!target) return;
-      e.preventDefault();
-      closeMenu();
-      scrollToEl(target, href === "#main" ? 0 : undefined);
-      return;
-    }
-    var url = new URL(a.href, location.href);
-    if (!isPageLink(url)) return;
-    if (url.pathname === location.pathname && url.search === location.search) {
-      e.preventDefault();
-      closeMenu();
-      if (url.hash) {
-        var t = document.getElementById(url.hash.slice(1));
-        if (t) scrollToEl(t);
-      } else scrollToEl(document.body, 0);
-      return;
-    }
-    if (!curtain || reduced) return;
-    e.preventDefault();
-    navigate(url, true);
-  });
-  if (curtain && !reduced) {
-    history.replaceState({ nf: 1 }, "", location.href);
-    window.addEventListener("popstate", function () {
-      var url = new URL(location.href);
-      if (!isPageLink(url)) return;
-      navigate(url, false);
-    });
-  }
-  window.addEventListener("pageshow", function (e) { if (e.persisted) { closeMenu(true); resetCurtain(); } });
-  function warmPath(path) { if (path !== location.pathname) fetchPage(path).catch(function () {}); }
-  var warm = function (e) {
-    var a = e.target.closest && e.target.closest("a[href]");
-    if (!a) return;
-    var href = a.getAttribute("href");
-    if (!href || href.charAt(0) === "#" || /^(mailto:|tel:)/i.test(href)) return;
-    var u = new URL(a.href, location.href);
-    if (isPageLink(u)) warmPath(u.pathname);
-  };
-  document.addEventListener("touchstart", warm, { passive: true });
-  document.addEventListener("mouseover", warm, { passive: true });
-  var idle = window.requestIdleCallback || function (f) { return setTimeout(f, 1500); };
-  idle(function () {
-    $$(".site-header .nav a, .menu__list a").forEach(function (a) {
-      var u = new URL(a.href, location.href);
-      if (isPageLink(u)) warmPath(u.pathname);
-    });
-  });
-
-  /* ==========================================================================
-     PER-PAGE INITIALISATION
-     ========================================================================== */
-  function initPage(root) {
-    magnetic(root);
-    heroRotator(root);
-    heroCard(root);
-    fader(root);
-    stage(root);
-    motCheck(root);
-    wizard(root);
-    deck(root);
-    dial(root);
-    booking(root);
-    faqAnimate(root);
-  }
-
-  /* Magnetic buttons (desktop pointer) */
-  function magnetic(root) {
-    if (!finePointer || reduced) return;
-    $$("[data-magnetic]", root).forEach(function (el) {
-      el.addEventListener("mousemove", function (e) {
-        var r = el.getBoundingClientRect();
-        el.style.transform = "translate(" + (e.clientX - r.left - r.width / 2) * 0.2 + "px," + (e.clientY - r.top - r.height / 2) * 0.28 + "px)";
+  function splitWords(el) {
+    if (el.dataset.splitDone) return;
+    el.dataset.splitDone = "1";
+    var i = 0;
+    (function walk(node) {
+      Array.prototype.slice.call(node.childNodes).forEach(function (child) {
+        if (child.nodeType === 3) {
+          var frag = document.createDocumentFragment();
+          child.textContent.split(/(\s+)/).forEach(function (part) {
+            if (!part) return;
+            if (/^\s+$/.test(part)) { frag.appendChild(document.createTextNode(" ")); return; }
+            var w = document.createElement("span"); w.className = "w";
+            var inner = document.createElement("span"); inner.textContent = part;
+            inner.style.setProperty("--i", i++);
+            w.appendChild(inner); frag.appendChild(w);
+          });
+          node.replaceChild(frag, child);
+        } else if (child.nodeType === 1 && child.tagName !== "BR") walk(child);
       });
-      el.addEventListener("mouseleave", function () { el.style.transform = ""; });
-    });
+    })(el);
   }
+  function reveals() {
+    var targets = $$("[data-split], [data-reveal], [data-stagger], [data-clip], .statement__text, .cert, .want__card--no, .berg__stage");
+    /* "That voice" lines: each is crossed out as it reaches the upper half of
+       the screen, so it can be read first. */
+    var lines = $$(".voice__list li");
+    if (reduced || !("IntersectionObserver" in window)) lines.forEach(function (el) { el.classList.add("is-in"); });
+    else {
+      var lio = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting || e.boundingClientRect.top < 0) { e.target.classList.add("is-in"); lio.unobserve(e.target); }
+        });
+      }, { rootMargin: "0px 0px -48% 0px", threshold: 0 });
+      lines.forEach(function (el) { lio.observe(el); });
+    }
+    if (reduced || !("IntersectionObserver" in window)) {
+      targets.forEach(function (el) { el.classList.add("is-in"); });
+      return;
+    }
+    $$("[data-split], .statement__text").forEach(splitWords);
+    $$("[data-stagger]").forEach(function (wrap) {
+      Array.prototype.slice.call(wrap.children).forEach(function (c, k) { c.style.setProperty("--d", (k * 70) + "ms"); });
+    });
+    var vh = window.innerHeight;
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting || e.boundingClientRect.top < 0) { e.target.classList.add("is-in"); io.unobserve(e.target); }
+      });
+    }, { rootMargin: "0px 0px -8% 0px", threshold: 0 });
+    targets.forEach(function (el) {
+      var r = el.getBoundingClientRect();
+      if (r.top < vh * 0.94) el.classList.add("is-in");   /* already on screen (or above): show now */
+      else io.observe(el);
+    });
+    doc.classList.add("reveal-on");
+    /* Safety net: if anything is still waiting when the page is printed or
+       the tab is restored, show it. */
+    window.addEventListener("beforeprint", function () { targets.forEach(function (el) { el.classList.add("is-in"); }); });
+  }
+  reveals();
 
-  /* Hero: "Ditch the [doubt.]" — the word is struck out, then replaced */
-  function heroRotator(root) {
-    var rots = $$("[data-rotator]", root);
-    if (!rots.length) return;
-    var n = $$(".rot__word", rots[0]).length;
-    var idx = 0, playing = true, visible = true, busy = false;
-    var countEl = $("[data-rot-count]", root), barEl = $("[data-rot-bar]", root);
+  /* ---------- Hero: "Ditch the [doubt.]" — the word is struck out, then replaced ---------- */
+  function heroRotator() {
+    var rot = $("[data-rotator]");
+    if (!rot || reduced) return;
+    var words = $$(".rot__word", rot);
+    var countEl = $("[data-rot-count]"), barEl = $("[data-rot-bar]");
+    var idx = 0, timer = null, visible = true;
     function setCount() {
       if (countEl) countEl.textContent = String(idx + 1).padStart(2, "0");
-      if (barEl) barEl.style.setProperty("--p", (idx + 1) / n);
+      if (barEl) barEl.style.setProperty("--p", (idx + 1) / words.length);
     }
-    rots.forEach(function (r) { var w = $$(".rot__word", r); w.forEach(function (x, i) { x.classList.toggle("is-on", i === 0); }); });
-    setCount();
     function step() {
-      if (!playing || !visible || busy || document.hidden) return;
-      busy = true;
-      var nextIdx = (idx + 1) % n;
-      rots.forEach(function (r) {
-        var words = $$(".rot__word", r);
-        var cur = words[idx], nxt = words[nextIdx];
-        var strike = $(".rot__strike", cur);
-        if (reduced || !cur.animate) {
-          cur.classList.remove("is-on"); nxt.classList.add("is-on"); return;
-        }
-        strike.animate([{ transform: "scaleX(0)" }, { transform: "scaleX(1)" }], { duration: 520, easing: "cubic-bezier(.65,0,.35,1)", fill: "forwards" });
-        setTimeout(function () {
-          cur.animate([{ transform: "none", opacity: 1 }, { transform: "translateY(-38%)", opacity: 0 }], { duration: 420, easing: "cubic-bezier(.65,0,.35,1)", fill: "forwards" }).onfinish = function () {
-            cur.classList.remove("is-on");
-            cur.getAnimations().forEach(function (a) { a.cancel(); });
-            strike.getAnimations().forEach(function (a) { a.cancel(); });
-          };
-          nxt.classList.add("is-on");
-          nxt.animate([{ transform: "translateY(42%)", opacity: 0 }, { transform: "none", opacity: 1 }], { duration: 720, delay: 160, easing: "cubic-bezier(.22,1,.36,1)", fill: "backwards" });
-        }, 760);
-      });
-      setTimeout(function () { idx = nextIdx; setCount(); busy = false; }, 1700);
+      if (!visible || document.hidden) return;
+      var cur = words[idx], next = words[(idx + 1) % words.length];
+      cur.classList.add("is-x");                                   /* strike it out */
+      setTimeout(function () {
+        cur.classList.remove("is-on"); cur.classList.add("is-out");
+        next.classList.remove("is-out", "is-x"); next.classList.add("is-on");
+        idx = (idx + 1) % words.length; setCount();
+        setTimeout(function () { cur.classList.remove("is-out", "is-x"); }, 800);
+      }, 650);
     }
-    var first = later(function () { every(step, 3200); }, doc.classList.contains("is-preloading") ? 2600 : 1600);
-    inView(rots[0], function (v) { visible = v; }, { threshold: 0 });
+    setCount();
+    setTimeout(function () { timer = setInterval(step, 3400); }, 2400);
+    inView(rot, function (v) { visible = v; }, { threshold: 0 });
   }
+  heroRotator();
 
-  /* Hero floating card: gauge sweeps up once visible */
-  function heroCard(root) {
-    var card = $(".hero__card", root);
-    if (!card) return;
-    later(function () { card.classList.add("is-live"); }, doc.classList.contains("is-preloading") ? 2600 : 1200);
-  }
+  /* Hero floating card: gauge sweeps up shortly after load */
+  var heroCard = $(".hero__card");
+  if (heroCard) setTimeout(function () { heroCard.classList.add("is-live"); }, 900);
 
-  /* "Turn down the critic" fader */
-  function fader(root) {
-    var f = $("[data-fader]", root);
+  /* ---------- "Turn down the critic" fader (moves only when the visitor moves it) ---------- */
+  function fader() {
+    var f = $("[data-fader]");
     if (!f) return;
     var range = $(".range", f), critic = $(".fader__critic", f), cheer = $(".fader__cheer", f);
     var cText = $("p", critic), hText = $("p", cheer), vol = $("[data-vol]", f), hint = $(".fader__hint", f);
     var pairs = $$(".fader__pairs li", f).map(function (li) { return [li.getAttribute("data-critic"), li.getAttribute("data-cheer")]; });
-    var bars = $$(".fader__meter i", f);
-    var pi = 0, touched = false, alive = true;
+    var pi = 0;
     function apply() {
-      var v = Number(range.value) / 100;
-      var c = 1 - v;
+      var v = Number(range.value) / 100, c = 1 - v;
       f.style.setProperty("--critic", c.toFixed(3));
-      critic.style.opacity = Math.max(0, 1 - v * 1.35).toFixed(3);
-      critic.style.filter = "blur(" + (v * 10).toFixed(1) + "px)";
-      critic.style.transform = "scale(" + (1 - v * 0.12).toFixed(3) + ")";
+      f.classList.toggle("is-calm", c <= 0.5);
+      critic.style.opacity = Math.max(0, 1 - v * 1.4).toFixed(3);
+      critic.style.transform = "translateY(" + (-v * 14).toFixed(1) + "px)";
       cheer.style.opacity = Math.max(0, (v - 0.35) / 0.65).toFixed(3);
-      cheer.style.filter = "blur(" + (Math.max(0, 1 - v) * 8).toFixed(1) + "px)";
-      cheer.style.transform = "translateY(" + ((1 - v) * 16).toFixed(1) + "px)";
+      cheer.style.transform = "translateY(" + ((1 - v) * 14).toFixed(1) + "px)";
       if (vol) vol.textContent = Math.round(c * 100) + "%";
       if (hint) hint.textContent = v > 0.85 ? "Much better. Hear that?" : v > 0.35 ? "Keep going…" : "Drag to turn the critic down";
     }
@@ -515,83 +209,26 @@
       cText.textContent = "“" + pairs[pi][0] + "”";
       hText.textContent = "“" + pairs[pi][1] + "”";
     }
-    range.addEventListener("input", function () { touched = true; apply(); });
-    $(".fader__next", f).addEventListener("click", function () {
-      touched = true;
-      var from = Number(range.value);
-      setPair(pi + 1);
-      if (reduced) { range.value = 0; apply(); return; }
-      var t0 = performance.now();
-      (function back(now) {
-        var p = Math.min(1, (now - t0) / 500);
-        range.value = from * (1 - p); apply();
-        if (p < 1) requestAnimationFrame(back);
-      })(t0);
-    });
+    range.addEventListener("input", apply);
+    $(".fader__next", f).addEventListener("click", function () { setPair(pi + 1); range.value = 0; apply(); });
     if (pairs.length) setPair(0);
     apply();
-    /* VU meter: GPU-only (scaleY) and only while the fader is on screen */
-    if (!reduced) {
-      var meterOn = false, meterTimer = null;
-      var meter = function () {
-        if (!alive || !meterOn) return;
-        var c = 1 - Number(range.value) / 100;
-        bars.forEach(function (b, i) {
-          var h = (0.15 + Math.random() * 0.85) * c * (0.55 + 0.45 * Math.sin(Date.now() / 260 + i));
-          b.style.transform = "scaleY(" + Math.max(0.06, Math.abs(h)).toFixed(3) + ")";
-        });
-        f.classList.toggle("is-calm", c <= 0.5);
-        meterTimer = setTimeout(function () { requestAnimationFrame(meter); }, 110);
-      };
-      inView(f, function (v) {
-        if (v && !meterOn) { meterOn = true; meter(); }
-        else if (!v) { meterOn = false; clearTimeout(meterTimer); }
-      }, { threshold: 0 });
-      onCleanup(function () { alive = false; clearTimeout(meterTimer); });
-    }
-    /* A gentle nudge the first time it scrolls into view */
-    var nudged = false;
-    inView(f, function (v) {
-      if (!v || nudged || touched || reduced) return;
-      nudged = true;
-      var t0 = performance.now();
-      (function go(now) {
-        if (touched) return;
-        var p = Math.min(1, (now - t0) / 1800);
-        range.value = Math.sin(p * Math.PI) * 42; apply();
-        if (p < 1) requestAnimationFrame(go);
-      })(t0);
-    }, { threshold: 0.6 });
   }
+  fader();
 
-  /* Testimonial stage */
-  function stage(root) {
-    var s = $("[data-stage]", root);
+  /* ---------- Testimonials: visitor picks who to read ---------- */
+  function stage() {
+    var s = $("[data-stage]");
     if (!s) return;
     var qs = $$(".tstage__q", s), btns = $$(".tstage__btn", s);
-    var i = 0, hover = false, visible = false, timer = null;
     function show(n) {
-      i = (n + qs.length) % qs.length;
-      qs.forEach(function (q, k) { q.classList.toggle("is-on", k === i); q.setAttribute("aria-hidden", k === i ? "false" : "true"); });
-      btns.forEach(function (b, k) {
-        b.classList.toggle("is-on", k === i); b.setAttribute("aria-pressed", k === i ? "true" : "false");
-        var bar = $(".tstage__bar i", b);
-        /* restart the progress bar on the next frame (no forced page layout) */
-        if (bar) { bar.style.animation = "none"; requestAnimationFrame(function () { requestAnimationFrame(function () { bar.style.animation = ""; }); }); }
-      });
-      restart();
+      qs.forEach(function (q, k) { q.classList.toggle("is-on", k === n); q.setAttribute("aria-hidden", k === n ? "false" : "true"); });
+      btns.forEach(function (b, k) { b.classList.toggle("is-on", k === n); b.setAttribute("aria-pressed", k === n ? "true" : "false"); });
     }
-    function restart() {
-      clearTimeout(timer);
-      if (!hover && visible && !reduced) timer = setTimeout(function () { show(i + 1); }, 9000);
-    }
-    onCleanup(function () { clearTimeout(timer); });
     btns.forEach(function (b, k) { b.addEventListener("click", function () { show(k); }); });
-    s.addEventListener("mouseenter", function () { hover = true; clearTimeout(timer); s.classList.add("is-paused"); });
-    s.addEventListener("mouseleave", function () { hover = false; s.classList.remove("is-paused"); restart(); });
-    inView(s, function (v) { visible = v; if (v) restart(); else clearTimeout(timer); }, { threshold: 0.3 });
     show(0);
   }
+  stage();
 
   /* ---------- Mindset MOT self-check ---------- */
   var AREAS = {
@@ -742,7 +379,7 @@
           var rp = $("[data-reply]", done); if (rp) rp.textContent = CFG.replyPromise || "soon";
         }
         store.del("nf_mot");
-        if (window.lenis) window.lenis.resize();
+        
       };
       if (CFG.formEndpoint) {
         next.disabled = true;
@@ -852,13 +489,17 @@
   }
 
   /* ---------- Embedded TidyCal calendar ---------- */
+  /* The calendar is a heavy third-party app, so it loads only when someone
+     shows they want to book: the "Show available times" button, any link
+     to #book, or arriving on the page at #book. Scrolling past never loads it. */
   function booking(root) {
     var slot = $("[data-tidycal]", root);
     if (!slot || !CFG.bookingPath) return;
     var loaded = false;
-    inView(slot, function (v) {
-      if (!v || loaded) return;
+    function load() {
+      if (loaded) return;
       loaded = true;
+      slot.classList.add("is-loading");
       var holder = document.createElement("div");
       holder.className = "tidycal-embed";
       holder.setAttribute("data-path", CFG.bookingPath);
@@ -870,33 +511,37 @@
       window.__nfTidy = true;
       document.body.appendChild(s);
       var check = every(function () {
-        if ($("iframe", slot)) { slot.classList.add("is-ready"); clearInterval(check); if (window.lenis) window.lenis.resize(); }
+        if ($("iframe", slot)) { slot.classList.add("is-ready"); clearInterval(check);  }
       }, 500);
       later(function () { clearInterval(check); if (!$("iframe", slot)) slot.classList.add("is-fallback"); }, 9000);
-    }, { rootMargin: "400px 0px" });
-  }
-
-  /* Smoothly animate <details> FAQ open/close */
-  function faqAnimate(root) {
-    $$(".faq details", root).forEach(function (det) {
-      var sum = $("summary", det), ans = $(".faq__a", det);
-      if (!sum || !ans || reduced || !ans.animate) return;
-      sum.addEventListener("click", function (e) {
-        e.preventDefault();
-        if (det.open) {
-          var h = ans.offsetHeight;
-          det.classList.add("is-closing");
-          ans.animate([{ height: h + "px", opacity: 1 }, { height: "0px", opacity: 0 }], { duration: 380, easing: "cubic-bezier(.65,0,.35,1)" }).onfinish = function () { det.open = false; det.classList.remove("is-closing"); if (window.lenis) window.lenis.resize(); };
-        } else {
-          det.open = true;
-          var h2 = ans.offsetHeight;
-          ans.animate([{ height: "0px", opacity: 0 }, { height: h2 + "px", opacity: 1 }], { duration: 480, easing: "cubic-bezier(.22,1,.36,1)" }).onfinish = function () { if (window.lenis) window.lenis.resize(); };
-        }
-      });
+    }
+    var btn = $("[data-load-calendar]", slot);
+    if (btn) btn.addEventListener("click", load);
+    document.addEventListener("click", function (e) {
+      var a = e.target.closest && e.target.closest('a[href$="#book"]');
+      if (a && new URL(a.href, location.href).pathname === location.pathname) load();
     });
+    if (location.hash === "#book") load();
   }
 
-  /* Boot */
-  initPage($("main"));
-  window.NFSite = { scrollToEl: scrollToEl };
+  motCheck(document);
+  wizard(document);
+  deck(document);
+  dial(document);
+  booking(document);
+
+  /* Warm up the next page as soon as a finger or cursor reaches a link */
+  var warmed = {};
+  function warm(e) {
+    var a = e.target.closest && e.target.closest("a[href]");
+    if (!a || a.target === "_blank") return;
+    var href = a.getAttribute("href");
+    if (!href || href.charAt(0) === "#" || /^(mailto:|tel:|https?:)/i.test(href)) return;
+    var path = href.split("#")[0].split("?")[0];
+    if (!path || warmed[path] || !/\.html$/.test(path)) return;
+    warmed[path] = true;
+    var l = document.createElement("link"); l.rel = "prefetch"; l.href = path; document.head.appendChild(l);
+  }
+  document.addEventListener("pointerover", warm, { passive: true });
+  document.addEventListener("touchstart", warm, { passive: true });
 })();

@@ -33,9 +33,8 @@
   <link rel="preload" href="assets/fonts/geist-mono-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="assets/css/fonts.css">
   <link rel="stylesheet" href="assets/css/main.css">
-  <script>
-    (function(d){d.classList.add('js');var rm=matchMedia('(prefers-reduced-motion: reduce)').matches;function ink(){d.classList.add('ui-ink');var m=document.querySelector('meta[name=theme-color]');if(m)m.setAttribute('content','#0a1a1d')}try{var pt=sessionStorage.getItem('nf_pt');if(pt||d.classList.contains('no-preloader')||sessionStorage.getItem('nf_seen')||rm)d.classList.add('no-preloader');else{ink();d.classList.add('is-preloading')}sessionStorage.setItem('nf_seen','1');if(pt&&!rm){d.style.backgroundColor='#0a1a1d';d.classList.add('pt-enter');ink();sessionStorage.removeItem('nf_pt');setTimeout(function(){d.classList.remove('pt-enter','ui-ink');d.style.backgroundColor=''},3200)}}catch(e){}})(document.documentElement);
-  </script>
+  <script>document.documentElement.classList.add('js');</script>
+  <script type="speculationrules">{"prefetch":[{"where":{"href_matches":"/*.html"},"eagerness":"moderate"}]}</script>
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -56,41 +55,15 @@
 <body data-page="{{page.nav}}">
   <a class="skip-link" href="#main">Skip to content</a>
 
-  <div class="preloader" aria-hidden="true">
-    <div class="preloader__glow"></div>
-    <div class="preloader__top"><span class="preloader__brand">{{mark}} Nicole Freeman</span><span>Coaching · London &amp; Zoom</span></div>
-    <div class="preloader__words">
-      <span class="pw"><span>Ditch</span></span>
-      <span class="pw"><span>the</span></span>
-      <span class="pw pw--x"><span><em>doubt.</em><i class="pw__strike"></i></span></span>
-    </div>
-    <div class="preloader__bottom"><span>You don't have to be perfect to be amazing</span><span class="preloader__count">00</span></div>
-  </div>
-
-  <div class="curtain" aria-hidden="true">
-    <div class="curtain__layer curtain__layer--fizz"></div>
-    <div class="curtain__layer curtain__layer--ink">
-      <div class="curtain__label">
-        <span class="curtain__kick">{{mark}} Nicole Freeman · Coaching</span>
-        <span class="curtain__title">Ditch the <em>doubt</em></span>
-        <span class="curtain__bar"><i></i></span>
-      </div>
-    </div>
-  </div>
-
   {{> header}}
 
-  <main id="main" data-theme-color="{{page.theme}}">
+  <main id="main">
 {{BODY}}
   </main>
 
   {{> footer}}
 
-  <script src="assets/vendor/gsap.min.js" defer></script>
-  <script src="assets/vendor/ScrollTrigger.min.js" defer></script>
-  <script src="assets/vendor/lenis.min.js" defer></script>
   <script src="assets/js/config.js" defer></script>
   <script src="assets/js/site.js" defer></script>
-  <script src="assets/js/motion.js" defer></script>
 </body>
 </html>

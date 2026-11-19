@@ -23,9 +23,10 @@ python3 _src/build.py
 
 - `_src/pages/*.html`: the body of each page (the meta block at the top sets the title and description)
 - `_src/partials/*.html`: layout, header, footer, final call to action
-- `assets/css/main.css`: design tokens at the top (colours, type scale, spacing), then components and breakpoints
-- `assets/js/site.js`: menu, header, page transitions, hero rotator, fader, self-check, enquiry form, deck, dial, TidyCal embed
-- `assets/js/motion.js`: GSAP, ScrollTrigger and Lenis animations (respects `prefers-reduced-motion`)
+- `assets/css/main.css`: design tokens at the top (colours, type scale, spacing), then components, motion (CSS keyframes, page cross-fade) and breakpoints
+- `assets/js/site.js`: menu, scroll reveals, hero rotator, fader, testimonials, self-check, enquiry form, deck, dial, TidyCal embed
+
+No animation libraries and no scroll hijacking: the page scrolls natively, reveals are CSS animations triggered by one IntersectionObserver, and content is never hidden unless the script is running (with JavaScript off, everything shows). Motion is switched off for visitors who ask for reduced motion.
 - `_src/og/og.html`: the link-preview image (`assets/img/og-nicole-freeman.jpg`)
 
 ## Bookings and enquiries
