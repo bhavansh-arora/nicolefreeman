@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en-GB" class="{{page.htmlclass}}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>{{page.title}}</title>
+  <meta name="description" content="{{page.description}}">
+  <link rel="canonical" href="{{page.canonical}}">
+  <meta name="theme-color" content="#f6f1e9">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Nicole Freeman Coaching">
+  <meta property="og:title" content="{{page.title}}">
+  <meta property="og:description" content="{{page.description}}">
+  <meta property="og:url" content="{{page.canonical}}">
+  <meta property="og:locale" content="en_GB">
+  <meta property="og:image" content="https://nicolefreeman.codebunny.net/{{page.og_image}}">
+  <meta property="og:image:secure_url" content="https://nicolefreeman.codebunny.net/{{page.og_image}}">
+  <meta property="og:image:type" content="image/jpeg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Nicole Freeman, mindset coach and clinical hypnotherapist: Ditch the doubt.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{page.title}}">
+  <meta name="twitter:description" content="{{page.description}}">
+  <meta name="twitter:image" content="https://nicolefreeman.codebunny.net/{{page.og_image}}">
+  <meta name="twitter:image:alt" content="Nicole Freeman, mindset coach and clinical hypnotherapist: Ditch the doubt.">
+  <link rel="icon" href="favicon.ico" sizes="48x48">
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
+  <link rel="preload" href="assets/fonts/schibsted-grotesk-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/fraunces-italic.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/geist-mono-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="assets/css/fonts.css">
+  <link rel="stylesheet" href="assets/css/main.css">
+  <script>
+    (function(d){d.classList.add('js');var rm=matchMedia('(prefers-reduced-motion: reduce)').matches;function ink(){d.classList.add('ui-ink');var m=document.querySelector('meta[name=theme-color]');if(m)m.setAttribute('content','#0a1a1d')}try{var pt=sessionStorage.getItem('nf_pt');if(pt||d.classList.contains('no-preloader')||sessionStorage.getItem('nf_seen')||rm)d.classList.add('no-preloader');else{ink();d.classList.add('is-preloading')}sessionStorage.setItem('nf_seen','1');if(pt&&!rm){d.style.backgroundColor='#0a1a1d';d.classList.add('pt-enter');ink();sessionStorage.removeItem('nf_pt');setTimeout(function(){d.classList.remove('pt-enter','ui-ink');d.style.backgroundColor=''},3200)}}catch(e){}})(document.documentElement);
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ProfessionalService",
+    "name": "Nicole Freeman Coaching",
+    "url": "https://nicolefreeman.co.uk/",
+    "image": "https://nicolefreeman.codebunny.net/assets/img/og-nicole-freeman.jpg",
+    "logo": "https://nicolefreeman.codebunny.net/assets/img/icon-512.png",
+    "telephone": "+44 7976 268520",
+    "email": "nicole@nicolefreeman.co.uk",
+    "address": { "@type": "PostalAddress", "addressLocality": "London", "addressCountry": "GB" },
+    "areaServed": ["London", "United Kingdom", "Worldwide (Zoom)"],
+    "founder": { "@type": "Person", "name": "Nicole Freeman", "jobTitle": "Mindset coach (PCC) and clinical hypnotherapist", "sameAs": ["https://www.linkedin.com/in/nicole-freeman-coaching/", "https://www.instagram.com/nicolefreemancoaching/", "https://www.facebook.com/nicolefreemancoach/"] },
+    "slogan": "You don't have to be perfect to be amazing."
+  }
+  </script>
+</head>
+<body data-page="{{page.nav}}">
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <div class="preloader" aria-hidden="true">
+    <div class="preloader__glow"></div>
+    <div class="preloader__top"><span class="preloader__brand">{{mark}} Nicole Freeman</span><span>Coaching · London &amp; Zoom</span></div>
+    <div class="preloader__words">
+      <span class="pw"><span>Ditch</span></span>
+      <span class="pw"><span>the</span></span>
+      <span class="pw pw--x"><span><em>doubt.</em><i class="pw__strike"></i></span></span>
+    </div>
+    <div class="preloader__bottom"><span>You don't have to be perfect to be amazing</span><span class="preloader__count">00</span></div>
+  </div>
+
+  <div class="curtain" aria-hidden="true">
+    <div class="curtain__layer curtain__layer--fizz"></div>
+    <div class="curtain__layer curtain__layer--ink">
+      <div class="curtain__label">
+        <span class="curtain__kick">{{mark}} Nicole Freeman · Coaching</span>
+        <span class="curtain__title">Ditch the <em>doubt</em></span>
+        <span class="curtain__bar"><i></i></span>
+      </div>
+    </div>
+  </div>
+
+  {{> header}}
+
+  <main id="main" data-theme-color="{{page.theme}}">
+{{BODY}}
+  </main>
+
+  {{> footer}}
+
+  <script src="assets/vendor/gsap.min.js" defer></script>
+  <script src="assets/vendor/ScrollTrigger.min.js" defer></script>
+  <script src="assets/vendor/lenis.min.js" defer></script>
+  <script src="assets/js/config.js" defer></script>
+  <script src="assets/js/site.js" defer></script>
+  <script src="assets/js/motion.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,50 @@
+<header class="site-header">
+    <div class="header-bar">
+      <a class="brand" href="index.html" aria-label="Nicole Freeman Coaching, home">{{mark}}<span class="brand__text"><span class="brand__name">Nicole Freeman</span><span class="brand__sub">Coaching</span></span></a>
+      <nav class="nav" aria-label="Primary">
+        <a href="about.html" {{nav:about}}>About</a>
+        <div class="nav__drop">
+          <a href="coaching.html" {{nav:coaching}} aria-haspopup="true">Coaching <svg class="nav__chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></a>
+          <div class="nav__sub">
+            <a href="coaching.html" {{cur:coaching.html}}><span class="nav__ico">{{icon:brain}}</span><span><b>1:1 coaching &amp; hypnotherapy</b><small>6–12 month packages · Zoom, London, walk &amp; talk</small></span></a>
+            <a href="mindset-mot.html" {{cur:mindset-mot.html}}><span class="nav__ico nav__ico--fizz">{{icon:gauge}}</span><span><b>Free Mindset MOT</b><small>60 minutes to see where you're stuck</small></span></a>
+            <a href="supervision.html" {{cur:supervision.html}}><span class="nav__ico">{{icon:users}}</span><span><b>Supervision &amp; teams</b><small>EMCC supervision, talks, workshops</small></span></a>
+          </div>
+        </div>
+        <a href="mindset-mot.html" {{nav:mot}}>Mindset MOT <span class="nav__tag">Free</span></a>
+        <a href="kind-words.html" {{nav:kind}}>Kind words</a>
+        <a href="contact.html" {{nav:contact}}>Contact</a>
+      </nav>
+      <div class="header-actions">
+        <a class="btn btn--fizz btn--sm header-cta" href="mindset-mot.html#book" data-book><span class="btn__label">Book your free MOT</span><span class="btn__icon">{{icon:arrow-ur}}</span></a>
+        <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-menu"><span class="menu-toggle__text">Menu</span><span class="menu-toggle__lines"><i></i><i></i></span></button>
+      </div>
+    </div>
+  </header>
+
+  <div class="menu-backdrop" aria-hidden="true"></div>
+  <div class="menu" id="site-menu" inert data-lenis-prevent>
+    <div class="menu__inner">
+      <ul class="menu__list">
+        <li><a href="index.html" {{cur:index.html}}><span>01</span><b>Home</b></a></li>
+        <li><a href="about.html" {{cur:about.html}}><span>02</span><b>Meet <em>Nicole</em></b></a></li>
+        <li><a href="coaching.html" {{cur:coaching.html}}><span>03</span><b>Coaching <em>&amp; hypnotherapy</em></b></a></li>
+        <li><a href="mindset-mot.html" {{cur:mindset-mot.html}}><span>04</span><b>Mindset <em>MOT</em></b><i class="menu__tag">Free</i></a></li>
+        <li><a href="supervision.html" {{cur:supervision.html}}><span>05</span><b>Supervision <em>&amp; teams</em></b></a></li>
+        <li><a href="kind-words.html" {{cur:kind-words.html}}><span>06</span><b>Kind <em>words</em></b></a></li>
+        <li><a href="contact.html" {{cur:contact.html}}><span>07</span><b>Let's <em>chat</em></b></a></li>
+      </ul>
+      <div class="menu__aside">
+        <a class="btn btn--fizz menu__cta" href="mindset-mot.html#book" data-book><span class="btn__label">Book your free Mindset MOT</span><span class="btn__icon">{{icon:arrow-ur}}</span></a>
+        <div class="menu__contact">
+          <a href="tel:+447976268520">{{icon:phone}} +44 7976 268 520</a>
+          <a href="mailto:nicole@nicolefreeman.co.uk">{{icon:mail}} nicole@nicolefreeman.co.uk</a>
+        </div>
+        <div class="socials">
+          <a href="https://www.linkedin.com/in/nicole-freeman-coaching/" target="_blank" rel="noopener" aria-label="Nicole on LinkedIn">{{icon:linkedin}}</a>
+          <a href="https://www.instagram.com/nicolefreemancoaching/" target="_blank" rel="noopener" aria-label="Nicole on Instagram">{{icon:instagram}}</a>
+          <a href="https://www.facebook.com/nicolefreemancoach/" target="_blank" rel="noopener" aria-label="Nicole on Facebook">{{icon:facebook}}</a>
+        </div>
+      </div>
+    </div>
+  </div>
