@@ -236,11 +236,14 @@
           var dir = i % 2 ? 1 : -1;
           var tw = gsap.fromTo(row, { xPercent: dir === -1 ? 0 : -50 }, { xPercent: dir === -1 ? -50 : 0, duration: 38 + i * 6, ease: "none", repeat: -1 });
           marqueeTweens.push(tw);
+          /* One reusable easing tween per row instead of new tweens on every scroll tick */
+          var boost = gsap.quickTo(tw, "timeScale", { duration: 0.6, ease: "power2.out" });
+          var settle = null;
           ST.create({ trigger: mq, start: "top bottom", end: "bottom top",
             onUpdate: function (self) {
-              var v = Math.min(4, 1 + Math.abs(self.getVelocity()) / 600);
-              gsap.to(tw, { timeScale: v, duration: 0.2, overwrite: true });
-              gsap.to(tw, { timeScale: 1, duration: 1.2, delay: 0.2, overwrite: false });
+              boost(Math.min(3.5, 1 + Math.abs(self.getVelocity()) / 700));
+              if (settle) settle.kill();
+              settle = gsap.delayedCall(0.15, function () { boost(1); });
             },
             onToggle: function (self) { self.isActive ? tw.play() : tw.pause(); } });
         });
@@ -266,7 +269,7 @@
       var cta = $(".cta-final__panel", root);
       if (cta) {
         mm.add("(min-width: 761px)", function () {
-          gsap.from(cta, { scale: 0.94, borderRadius: 80, ease: "none", scrollTrigger: { trigger: cta, start: "top bottom", end: "top 40%", scrub: true } });
+          gsap.from(cta, { scale: 0.94, ease: "none", scrollTrigger: { trigger: cta, start: "top bottom", end: "top 40%", scrub: true } });
         });
       }
 
@@ -286,9 +289,12 @@
       }
     }, root);
 
-    /* Fonts can shift layout: refresh once they're in */
-    if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { ST.refresh(); });
-    setTimeout(function () { ST.refresh(); }, 600);
+    /* One position pass now (behind the transition cover on page swaps).
+       Only if the web fonts are still loading, one more once they land. */
+    ST.refresh();
+    if (document.fonts && document.fonts.status !== "loaded") {
+      document.fonts.ready.then(function () { ST.refresh(); });
+    }
   }
 
   function destroy() {

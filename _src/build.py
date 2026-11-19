@@ -124,6 +124,8 @@ def build():
         html = render(layout, meta)
         html = html.replace("{{BODY}}", render(body, meta))
         html = bust_cache(html)
+        # decode images off the main thread so scrolling never waits on them
+        html = re.sub(r'<img (?![^>]*decoding=)', '<img decoding="async" ', html)
         (ROOT / page.name).write_text(html)
         print("built", page.name)
 
