@@ -63,6 +63,7 @@ ICONS = {
     "layers": f'<svg {_S}><path d="m12 3 9 5-9 5-9-5z"/><path d="m3 13 9 5 9-5"/></svg>',
     "moon": f'<svg {_S}><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg>',
     "headphones": f'<svg {_S}><path d="M4 14v-2a8 8 0 0 1 16 0v2"/><rect x="3" y="14" width="4" height="7" rx="2"/><rect x="17" y="14" width="4" height="7" rx="2"/></svg>',
+    "route": f'<svg {_S}><circle cx="6" cy="19" r="2.5"/><circle cx="18" cy="5" r="2.5"/><path d="M8.5 19H17a3.5 3.5 0 0 0 0-7H7a3.5 3.5 0 0 1 0-7h8.5"/></svg>',
     "party": f'<svg {_S}><path d="M4 20 8.5 8l7.5 7.5z"/><path d="M14 4v2M19 9h2M17.5 5.5 16 7M12 8.5c1-1.5 1-3 0-4.5M15.5 12c1.5-1 3-1 4.5 0"/></svg>',
     "chart": f'<svg {_S}><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>',
     "volume": f'<svg {_S}><path d="M11 5 6 9H3v6h3l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg>',

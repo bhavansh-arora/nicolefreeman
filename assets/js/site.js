@@ -153,6 +153,16 @@
       });
     })(el);
   }
+  function countUp(el) {
+    var end = Number(el.getAttribute("data-count")), suf = el.getAttribute("data-suffix") || "", t0 = null;
+    if (reduced || !end) return;
+    (function tick(t) {
+      if (t0 === null) t0 = t;
+      var p = Math.min(1, (t - t0) / 1400), v = Math.round(end * (1 - Math.pow(1 - p, 3)));
+      el.textContent = v.toLocaleString("en-GB") + suf;
+      if (p < 1) requestAnimationFrame(tick);
+    })(performance.now());
+  }
   function reveals() {
     /* Footer wordmark: one span per letter, numbered for the stagger */
     $$(".footer__word").forEach(function (word) {
@@ -170,7 +180,7 @@
         });
       });
     });
-    var targets = $$("[data-split], [data-reveal], [data-stagger], [data-clip], .statement__text, .cert, .want__card--no, .berg__stage, .footer__word, [data-draw]");
+    var targets = $$("[data-split], [data-reveal], [data-stagger], [data-clip], .statement__text, .cert, .want__card--no, .berg__stage, .footer__word, [data-draw], .ico, .chips, .qbadge, .person img, .person__init, .kw__who img, .footer__badges img, .polaroid, .ticks, .want__list, .hatlets, .quals__list, .dial, [data-count]");
     /* "That voice" lines: each is crossed out as it reaches the upper half of
        the screen, so it can be read first. */
     var lines = $$(".voice__list li");
@@ -191,15 +201,22 @@
     $$("[data-stagger]").forEach(function (wrap) {
       Array.prototype.slice.call(wrap.children).forEach(function (c, k) { c.style.setProperty("--d", (k * 70) + "ms"); });
     });
-    var vh = window.innerHeight;
+    var vh = window.innerHeight, batch = 0;
+    /* Things that arrive together on screen get a small stagger */
+    function show(el, k) {
+      if (el.matches(".ico, .qbadge, .person img, .person__init, .footer__badges img")) el.style.setProperty("--d", Math.min(k, 8) * 70 + "ms");
+      el.classList.add("is-in");
+      if (el.hasAttribute("data-count")) countUp(el);
+    }
     var io = new IntersectionObserver(function (entries) {
       entries.forEach(function (e) {
-        if (e.isIntersecting || e.boundingClientRect.top < 0) { e.target.classList.add("is-in"); io.unobserve(e.target); }
+        if (e.isIntersecting || e.boundingClientRect.top < 0) { show(e.target, batch++); io.unobserve(e.target); }
       });
+      batch = 0;
     }, { rootMargin: "0px 0px -8% 0px", threshold: 0 });
     targets.forEach(function (el) {
       var r = el.getBoundingClientRect();
-      if (r.top < vh * 0.94) el.classList.add("is-in");   /* already on screen (or above): show now */
+      if (r.top < vh * 0.94) show(el, batch++);   /* already on screen (or above): show now */
       else io.observe(el);
     });
     doc.classList.add("reveal-on");

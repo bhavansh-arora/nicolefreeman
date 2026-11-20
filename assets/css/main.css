@@ -1672,6 +1672,9 @@ body, .panel--sand, .sec--sand { background-image: url("../img/paper.png"); back
   .cutout__notes .ph-note br { display: none; }
   .cutout__notes .hand { display: none; }
   .page-hero__media:not(.cutout-wrap) .ph-note { position: relative; left: auto !important; right: auto !important; top: auto !important; bottom: auto !important; display: inline-block; margin-top: 16px; }
+  /* a note whose card sits under the photo moves above it, pointing down */
+  .page-hero__media:has(.ph-note--top) { display: flex; flex-direction: column; }
+  .page-hero__media .ph-note--top { order: -1; align-self: flex-start; margin: 0 0 12px; }
 }
 /* Overlap fixes for notes on tablets and phones */
 .float-card b { line-height: 1.2; }
@@ -1718,4 +1721,156 @@ body, .panel--sand, .sec--sand { background-image: url("../img/paper.png"); back
   .cv__item { display: block; width: fit-content; }
   .cv__run { font-size: clamp(1.8rem, 8vw, 2.3rem); line-height: 1.12; }
   .cv__run > .cv__item + .cv__item { margin-top: 4px; }
+}
+
+/* ==========================================================================
+   15. Lighter sections: short lines, icons, contrast
+   ========================================================================== */
+.ico--sm { width: 38px; height: 38px; }
+.ico--sm svg { width: 18px; height: 18px; }
+.ico--sun { background: var(--sun); color: var(--ink); }
+.meet__short { margin-top: 18px; max-width: 34em; font-size: var(--fs-lead); line-height: 1.5; color: var(--text); }
+.meet__short strong { color: var(--ink); }
+.hatlets { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 20px; margin-top: 26px; }
+.hatlets--col { grid-template-columns: 1fr; }
+.hatlets li { display: flex; align-items: center; gap: 12px; font-weight: 600; color: var(--ink); letter-spacing: -.01em; line-height: 1.3; }
+.meet__text .btn-row { margin-top: 30px; }
+.berg__step h3 { display: flex; align-items: center; gap: 12px; }
+.berg__step .ico--sm { width: 34px; height: 34px; flex: none; }
+.motf__step { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 12px; align-items: start; }
+.motf__step p { margin-top: 6px; }
+.goodnews { display: flex; align-items: center; gap: 14px 20px; flex-wrap: wrap; width: fit-content; max-width: 100%; margin-top: clamp(28px, 3.4vw, 46px); padding: 12px 12px 12px 14px; border-radius: 999px; background: var(--paper); border: 1px solid var(--line); box-shadow: var(--shadow-s); }
+.goodnews p { font-size: var(--fs-lead); color: var(--text); }
+.goodnews b { color: var(--ink); }
+.pstep > .ico { margin-bottom: 14px; }
+.topic__top { display: flex; align-items: center; gap: 12px; }
+
+/* About: then -> now */
+.thennow { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); gap: clamp(16px, 3vw, 40px); align-items: center; margin-top: clamp(40px, 5vw, 72px); }
+.tn { border-radius: var(--r-l); padding: clamp(22px, 2.6vw, 36px); }
+.tn--then { background: var(--paper); border: 1.5px dashed var(--line-2); }
+.tn--now { background: var(--ink); color: var(--cream); box-shadow: var(--shadow); rotate: 1.2deg; }
+.tn__label { margin-bottom: 18px; font: 400 clamp(1.8rem, 2.6vw, 2.4rem)/1 var(--f-serif); font-style: italic; color: var(--muted); font-variation-settings: "SOFT" 100, "WONK" 1, "opsz" 72; }
+.tn--now .tn__label { color: var(--fizz-l); }
+.tn ul { display: grid; gap: 14px; }
+.tn li { display: flex; align-items: center; gap: 14px; font: 600 clamp(1.1rem, 1.6vw, 1.42rem)/1.25 var(--f-display); letter-spacing: -.02em; }
+.tn--then li { color: var(--muted); }
+.tn--then .ico { background: var(--sand); color: var(--fizz-d); }
+.tn--then s { text-decoration: none; background: linear-gradient(var(--fizz), var(--fizz)) 0 58% / 0% 2px no-repeat; transition: background-size .9s var(--ease-io); }
+.thennow.is-in .tn--then s, .thennow:not([data-stagger]) .tn--then s { background-size: 100% 2px; }
+.thennow.is-in .tn--then li:nth-child(1) s { transition-delay: .5s; }
+.thennow.is-in .tn--then li:nth-child(2) s { transition-delay: .75s; }
+.thennow.is-in .tn--then li:nth-child(3) s { transition-delay: 1s; }
+.tn__arrow { display: grid; justify-items: center; gap: 2px; color: var(--fizz-d); }
+.tn__arrow .hand { position: relative; width: 96px; height: 62px; }
+.tn__arrow .note { font-size: clamp(1.3rem, 1.8vw, 1.6rem); color: var(--fizz-d); rotate: -4deg; }
+.tn__close { margin-top: clamp(28px, 3vw, 44px); text-align: center; font: 600 clamp(1.25rem, 2vw, 1.75rem)/1.3 var(--f-display); letter-spacing: -.02em; color: var(--ink); }
+.tn__close em { font-family: var(--f-serif); font-style: italic; font-weight: 400; color: var(--fizz-d); font-variation-settings: "SOFT" 100, "WONK" 1; }
+
+/* Kind words: key line visible, the full story folds away */
+.kw__key { font-weight: 600; letter-spacing: -.02em; }
+.kw__more { margin-top: 14px; }
+.kw__more summary { list-style: none; display: inline-flex; align-items: center; gap: 10px; height: 44px; padding: 0 16px; border-radius: 999px; border: 1px solid var(--line-2); cursor: pointer; font: 600 15px/1 var(--f-body); letter-spacing: 0; color: var(--ink); transition: background .3s, border-color .3s; }
+.kw__more summary::-webkit-details-marker { display: none; }
+.kw__more summary svg { width: 16px; height: 16px; transition: rotate .4s var(--ease); }
+.kw__more[open] summary { margin-bottom: 16px; }
+.kw__more[open] summary svg { rotate: 45deg; }
+.kw__more > p { font-size: .82em; line-height: 1.5; color: var(--text); }
+.kw__more > p + p { margin-top: .7em; }
+.kw__more::details-content { height: 0; overflow: clip; transition: height .45s var(--ease), content-visibility .45s allow-discrete; }
+.kw__more[open]::details-content { height: auto; }
+@media (hover: hover) and (pointer: fine) { .kw__more summary:hover { background: var(--paper); border-color: var(--ink); } }
+
+@media (max-width: 900px) {
+  .thennow { grid-template-columns: 1fr; }
+  .tn__arrow { rotate: 90deg; margin: -6px 0; }
+  .tn__arrow .note { rotate: -94deg; }
+}
+@media (max-width: 760px) {
+  .hatlets { grid-template-columns: 1fr; gap: 10px; }
+  .goodnews { border-radius: 22px; padding: 16px; }
+  .tn--now { rotate: 0deg; }
+}
+
+/* ==========================================================================
+   16. Motion for icons and images
+   Hidden states exist only under .reveal-on (script running) and every
+   keyframe is "from" only, so nothing can get stuck invisible.
+   ========================================================================== */
+@keyframes icoPop { from { opacity: 0; transform: scale(.35) rotate(-16deg); } }
+@keyframes softPop { from { opacity: 0; transform: translateY(14px) scale(.92); } }
+@keyframes imgSettle { from { transform: scale(1.14); } }
+@keyframes dropIn { from { opacity: 0; transform: translateY(-40px) rotate(-7deg) scale(.95); } }
+@keyframes drift { to { translate: 0 -8px; } }
+@keyframes slideIn { from { opacity: 0; transform: translateX(-16px); } }
+@keyframes segIn { from { stroke-dasharray: 0 1005.3; } }
+
+/* icons, avatars, badges: pop in with a little overshoot */
+.reveal-on :is(.ico, .person img, .person__init, .kw__who img, .footer__badges img, .qbadge):not(.is-in) { opacity: 0; }
+.reveal-on :is(.ico, .person img, .person__init, .kw__who img, .footer__badges img).is-in { animation: icoPop .75s cubic-bezier(.34, 1.56, .64, 1) backwards; animation-delay: var(--d, 0ms); }
+.reveal-on .qbadge.is-in { animation: softPop .7s cubic-bezier(.34, 1.56, .64, 1) backwards; animation-delay: var(--d, 0ms); }
+/* chip rows */
+.reveal-on .chips:not(.is-in) .chip { opacity: 0; }
+.reveal-on .chips.is-in .chip { animation: softPop .6s var(--ease) backwards; }
+.reveal-on .chips.is-in .chip:nth-child(2) { animation-delay: .08s; }
+.reveal-on .chips.is-in .chip:nth-child(3) { animation-delay: .16s; }
+.reveal-on .chips.is-in .chip:nth-child(4) { animation-delay: .24s; }
+.reveal-on .chips.is-in .chip:nth-child(n+5) { animation-delay: .32s; }
+/* lists: rows slide in one after another */
+.reveal-on :is(.ticks, .want__list, .hatlets, .quals__list):not(.is-in) > li { opacity: 0; }
+.reveal-on :is(.ticks, .want__list, .hatlets, .quals__list).is-in > li { animation: slideIn .6s var(--ease) backwards; }
+.reveal-on :is(.ticks, .want__list, .hatlets, .quals__list).is-in > li:nth-child(2) { animation-delay: .07s; }
+.reveal-on :is(.ticks, .want__list, .hatlets, .quals__list).is-in > li:nth-child(3) { animation-delay: .14s; }
+.reveal-on :is(.ticks, .want__list, .hatlets, .quals__list).is-in > li:nth-child(4) { animation-delay: .21s; }
+.reveal-on :is(.ticks, .want__list, .hatlets, .quals__list).is-in > li:nth-child(5) { animation-delay: .28s; }
+.reveal-on :is(.ticks, .want__list, .hatlets, .quals__list).is-in > li:nth-child(6) { animation-delay: .35s; }
+.reveal-on :is(.ticks, .want__list, .hatlets, .quals__list).is-in > li:nth-child(n+7) { animation-delay: .42s; }
+/* photos: the frame unveils, the picture settles inside it */
+.reveal-on [data-clip].is-in img { animation: imgSettle 1.6s var(--ease) backwards; }
+.page-hero__photo img { animation: imgSettle 1.8s calc(var(--enter, 0s) + .22s) var(--ease) backwards; }
+.reveal-on .polaroid:not(.is-in) { opacity: 0; }
+.reveal-on .polaroid.is-in { animation: dropIn 1s cubic-bezier(.34, 1.4, .64, 1) backwards; }
+.kwh__face { animation: icoPop .8s cubic-bezier(.34, 1.56, .64, 1) backwards; }
+.kwh__face--a { animation-delay: calc(var(--enter, 0s) + .45s); }
+.kwh__face--b { animation-delay: calc(var(--enter, 0s) + .6s); }
+/* the MOT dial draws its four segments in turn */
+.reveal-on .dial:not(.is-in) .dial__seg { stroke-dasharray: 0 1005.3; }
+.reveal-on .dial.is-in .dial__seg { animation: segIn .9s var(--ease) backwards; }
+.reveal-on .dial.is-in .dial__seg:nth-of-type(2) { animation-delay: .22s; }
+.reveal-on .dial.is-in .dial__seg:nth-of-type(3) { animation-delay: .44s; }
+.reveal-on .dial.is-in .dial__seg:nth-of-type(4) { animation-delay: .66s; }
+/* gentle idle motion (translate only, so it never fights the entrances) */
+.float-card { animation: softPop .7s calc(var(--enter, 0s) + .7s) cubic-bezier(.34, 1.56, .64, 1) backwards, drift 5.5s ease-in-out calc(var(--enter, 0s) + 1.6s) infinite alternate; }
+.page-hero__media .float-card ~ .float-card { animation-delay: calc(var(--enter, 0s) + .85s), calc(var(--enter, 0s) + 2.2s); animation-duration: .7s, 6.5s; }
+.sticker { animation: pop .6s var(--ease) both, drift 4.8s ease-in-out infinite alternate; }
+.sticker--1 { animation-delay: calc(var(--enter, 0s) + .8s), calc(var(--enter, 0s) + 1.4s); }
+.sticker--2 { animation-delay: calc(var(--enter, 0s) + .9s), calc(var(--enter, 0s) + 2s); }
+.sticker--3 { animation-delay: calc(var(--enter, 0s) + 1s), calc(var(--enter, 0s) + 1.7s); }
+.meet__badge { animation: drift 6s ease-in-out infinite alternate; }
+/* playful hovers (real pointers only); transitions on rotate/scale, so a
+   hover never replays an entrance */
+@media (hover: hover) and (pointer: fine) {
+  .ico { transition: rotate .5s cubic-bezier(.34, 1.56, .64, 1), scale .5s cubic-bezier(.34, 1.56, .64, 1); }
+  :is(.tool, .topic, .pkg, .motf__step, .pstep, .ccard, .outcome, .format, .card, .level, .tn, .hatlets li, .berg__step, .goodnews):hover .ico { rotate: -10deg; scale: 1.12; }
+  .qbadge img { transition: rotate .5s var(--ease), scale .5s var(--ease); }
+  .qbadge:hover img { rotate: -6deg; scale: 1.07; }
+  .polaroid { transition: rotate .6s var(--ease); }
+  .polaroid img { transition: scale .9s var(--ease); }
+  .polaroid:hover { rotate: -1deg; }
+  .polaroid:hover img { scale: 1.03; }
+  .page-hero__photo img { transition: scale 1s var(--ease); }
+  .page-hero__photo:hover img { scale: 1.04; }
+  .chip { transition: translate .4s var(--ease), background .3s, border-color .3s; }
+  .chip:hover { translate: 0 -2px; }
+}
+/* small fixes for the icon rows */
+.topic { justify-content: flex-start; gap: 22px; min-height: 0; }
+.topic > div { margin-top: auto; }
+.topic .topic__top .ico { color: var(--ink); }
+.topic .topic__top .ico:not(.ico--fizz, .ico--teal, .ico--sun) { color: var(--aqua); }
+@media (max-width: 760px) {
+  .pstep:has(> .ico) { display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: 16px; padding-top: 22px; }
+  .pstep > .ico { grid-row: 1 / span 3; margin: 0; }
+  .pstep:has(> .ico) > :not(.ico) { grid-column: 2; }
+  .pstep:has(> .ico) h3 { margin-top: 8px; }
 }

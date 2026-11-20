@@ -34,7 +34,7 @@ Your site already has the right ingredients: your story, the Mindset MOT, and lo
 
 9. **Your story, your testimonials, and the fun stuff.** Phil's and Damian's full words on their own page, and an About page with your journey, your qualifications and ten fun facts (yes, including Mary Berry and the cake).
 
-It works on phones, tablets and desktop. It can sit on your current domain, and it doesn't change how you take bookings today.
+It's made to be skimmed: short lines, icons and hand-drawn touches carry the message, and the longer stories fold away until someone wants to read them. It works on phones, tablets and desktop. It can sit on your current domain, and it doesn't change how you take bookings today.
 
 Would you be up for a 15-minute call this week? I'd love to walk you through it and hear what you'd change.
 
@@ -51,5 +51,6 @@ Code Bunny
 - **Reply time.** The site promises a reply "within one working day". Change `replyPromise` in `assets/js/config.js` and the "Quick replies" card on the contact page if that's not right.
 - **Drafted copy to confirm:** the FAQ answers (hypnotherapy, DISC, coaching vs therapy), the six talk themes on the supervision page, and the "Turn down the critic" lines on the homepage.
 - **Handwritten notes are our words in her voice:** the rewrites under the crossed-out critic lines ("Unstuck. Calm. Moving.", "Off duty. Zero guilt." and so on), the photo notes ("ex chartered accountant", "recovering perfectionist", "cake approved by Mary Berry", "mum, baker, early jogger"), and the hero notes ("the kettle's on", "zero pressure. promise.", "coaches need coaches too"). Easy to change in `_src/pages/`.
+- **Shortened lines.** Some longer paragraphs became short lists: the "Then / Now" panel on About ("Put myself down" to "Found my voice", and so on), the four hats on the homepage, and the three reasons on the supervision page. All drawn from her own copy; check she's happy with the wording.
 - **Photo captions** are kept general ("Awards night", "Panel discussion", "Certified hypnotherapist").
 - **Enquiries.** Add a form endpoint (`formEndpoint` in `assets/js/config.js`, e.g. Formspree or a Make/Zapier webhook) for an automatic confirmation email and a CRM or sheet entry. Until then, enquiries open a pre-filled email to nicole@nicolefreeman.co.uk.
