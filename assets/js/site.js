@@ -190,7 +190,7 @@
         entries.forEach(function (e) {
           if (e.isIntersecting || e.boundingClientRect.top < 0) { e.target.classList.add("is-in"); lio.unobserve(e.target); }
         });
-      }, { rootMargin: "0px 0px -48% 0px", threshold: 0 });
+      }, { rootMargin: "0px 0px -18% 0px", threshold: 0 });
       lines.forEach(function (el) { lio.observe(el); });
     }
     if (reduced || !("IntersectionObserver" in window)) {
@@ -199,12 +199,12 @@
     }
     $$("[data-split], .statement__text").forEach(splitWords);
     $$("[data-stagger]").forEach(function (wrap) {
-      Array.prototype.slice.call(wrap.children).forEach(function (c, k) { c.style.setProperty("--d", (k * 70) + "ms"); });
+      Array.prototype.slice.call(wrap.children).forEach(function (c, k) { c.style.setProperty("--d", Math.min(k * 45, 360) + "ms"); });
     });
     var vh = window.innerHeight, batch = 0;
     /* Things that arrive together on screen get a small stagger */
     function show(el, k) {
-      if (el.matches(".ico, .qbadge, .person img, .person__init, .footer__badges img")) el.style.setProperty("--d", Math.min(k, 8) * 70 + "ms");
+      if (el.matches(".ico, .qbadge, .person img, .person__init, .footer__badges img")) el.style.setProperty("--d", Math.min(k, 8) * 45 + "ms");
       el.classList.add("is-in");
       if (el.hasAttribute("data-count")) countUp(el);
     }
@@ -213,10 +213,10 @@
         if (e.isIntersecting || e.boundingClientRect.top < 0) { show(e.target, batch++); io.unobserve(e.target); }
       });
       batch = 0;
-    }, { rootMargin: "0px 0px -8% 0px", threshold: 0 });
+    }, { rootMargin: "0px 0px 8% 0px", threshold: 0 });
     targets.forEach(function (el) {
       var r = el.getBoundingClientRect();
-      if (r.top < vh * 0.94) show(el, batch++);   /* already on screen (or above): show now */
+      if (r.top < vh * 1.04) show(el, batch++);   /* already on screen (or above): show now */
       else io.observe(el);
     });
     doc.classList.add("reveal-on");
