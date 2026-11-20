@@ -110,6 +110,27 @@ def bust_cache(html):
     return re.sub(r'((?:href|src)=")(assets/(?:css|js|vendor)/[\w.-]+\.(?:css|js))"', ver, html)
 
 
+def add_srcset(html):
+    """Give large photos smaller versions (NAME-800.webp, NAME-1200.webp) so
+    phones download and decode less. The original's width comes from its
+    width attribute."""
+    def one(m):
+        tag = m.group(0)
+        if "srcset=" in tag:
+            return tag
+        src = re.search(r'src="(assets/img/([\w-]+)\.webp)"', tag)
+        width = re.search(r'\bwidth="(\d+)"', tag)
+        if not src or not width:
+            return tag
+        base = src.group(2)
+        parts = [f"assets/img/{base}-{w}.webp {w}w" for w in (800, 1200) if (ROOT / "assets/img" / f"{base}-{w}.webp").is_file()]
+        if not parts:
+            return tag
+        parts.append(f"{src.group(1)} {width.group(1)}w")
+        return tag.replace(src.group(0), src.group(0) + f' srcset="{", ".join(parts)}" sizes="(max-width: 760px) 92vw, 46vw"', 1)
+    return re.sub(r"<img\b[^>]*>", one, html)
+
+
 def build():
     layout = (SRC / "partials" / "layout.html").read_text()
     for page in sorted((SRC / "pages").glob("*.html")):
@@ -127,6 +148,7 @@ def build():
         html = bust_cache(html)
         # decode images off the main thread so scrolling never waits on them
         html = re.sub(r'<img (?![^>]*decoding=)', '<img decoding="async" ', html)
+        html = add_srcset(html)
         (ROOT / page.name).write_text(html)
         print("built", page.name)
 

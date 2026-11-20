@@ -93,9 +93,9 @@
      and lifts away (CSS). Every step has a timer fallback, and the cover
      never blocks clicks, so nothing can hang.
      ========================================================================== */
-  var enterDelay = doc.classList.contains("nf-intro") ? 1700 : doc.classList.contains("nf-in") ? 550 : 0;
+  var enterDelay = doc.classList.contains("nf-intro") ? 1700 : doc.classList.contains("nf-in") ? 1050 : 0;
   /* Tidy up the classes once the CSS animations are done (purely cosmetic) */
-  setTimeout(function () { doc.classList.remove("nf-intro", "nf-in"); }, enterDelay ? enterDelay + 1100 : 0);
+  setTimeout(function () { doc.classList.remove("nf-intro", "nf-in"); }, enterDelay ? enterDelay + 1300 : 0);
 
   var leaving = false;
   function pageKey(path) { return (path.split("/").pop() || "index").replace(".html", "") || "index"; }
@@ -117,9 +117,9 @@
     doc.classList.remove("nf-intro", "nf-in");
     doc.classList.add("nf-out");
     store.set("nf_nav", "1");
-    setTimeout(function () { location.href = url.href; }, 620);
+    setTimeout(function () { location.href = url.href; }, 1350);
     /* Safety: if the browser never left (cancelled, offline), uncover */
-    setTimeout(function () { doc.classList.remove("nf-out"); store.del("nf_nav"); leaving = false; }, 5000);
+    setTimeout(function () { doc.classList.remove("nf-out"); store.del("nf_nav"); leaving = false; }, 7000);
   });
   /* Back/forward restores a page from memory: make sure it isn't covered */
   window.addEventListener("pageshow", function (e) {
