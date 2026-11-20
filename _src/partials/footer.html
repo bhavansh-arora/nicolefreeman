@@ -1,15 +1,19 @@
 <footer class="site-footer" data-theme="dark">
+    <div class="footer__glow" aria-hidden="true"></div>
     <div class="container">
       <div class="footer__top">
-        <div class="footer__lead">
-          <p class="eyebrow eyebrow--light"><i></i> Let's chat</p>
-          <a class="footer__big" href="contact.html">Ready when <em>you are.</em>{{icon:arrow-ur}}</a>
-        </div>
-        <div class="footer__contact">
-          <a href="tel:+447976268520"><small>Call or WhatsApp</small>+44 7976 268 520</a>
-          <a href="mailto:nicole@nicolefreeman.co.uk"><small>Email</small>nicole@nicolefreeman.co.uk</a>
+        <p class="eyebrow eyebrow--light"><i></i> Let's chat</p>
+        <a class="footer__big" href="contact.html">Ready when <em>you are.</em><span class="footer__big-arrow">{{icon:arrow-ur}}</span></a>
+        <div class="footer__reach">
+          <div class="footer__pills">
+            <a class="footer__pill" href="tel:+447976268520">{{icon:phone}}<span><small>Call</small>+44 7976 268 520</span></a>
+            <a class="footer__pill" href="https://wa.me/447976268520" target="_blank" rel="noopener">{{icon:whatsapp}}<span><small>WhatsApp</small>Message me</span></a>
+            <a class="footer__pill" href="mailto:nicole@nicolefreeman.co.uk">{{icon:mail}}<span><small>Email</small>nicole@nicolefreeman.co.uk</span></a>
+          </div>
+          <a class="btn btn--fizz btn--lg footer__book" href="mindset-mot.html#book" data-book><span class="btn__label">Book your free MOT</span><span class="btn__icon">{{icon:arrow-ur}}</span></a>
         </div>
       </div>
+
       <div class="footer__grid">
         <div class="footer__brand">
           <a class="brand brand--light" href="index.html" aria-label="Nicole Freeman Coaching, home">{{mark}}<span class="brand__text"><span class="brand__name">Nicole Freeman</span><span class="brand__sub">Coaching</span></span></a>
@@ -17,10 +21,10 @@
           <div class="footer__badges">
             <img src="assets/img/badges/pcc.webp" alt="ICF Professional Certified Coach (PCC)" width="56" height="56" loading="lazy">
             <span class="footer__badge-txt">EMCC<br>Senior Practitioner</span>
-            <span class="footer__badge-txt">EMCC Accredited<br>Coach Supervisor</span>
+            <span class="footer__badge-txt">EMCC accredited<br>coach supervisor</span>
           </div>
         </div>
-        <div class="footer__col">
+        <nav class="footer__col" aria-label="Work with me">
           <h3>Work with me</h3>
           <ul>
             <li><a href="coaching.html">1:1 coaching</a></li>
@@ -30,8 +34,8 @@
             <li><a href="supervision.html">Coach supervision</a></li>
             <li><a href="supervision.html#teams">Talks &amp; workshops</a></li>
           </ul>
-        </div>
-        <div class="footer__col">
+        </nav>
+        <nav class="footer__col" aria-label="Explore">
           <h3>Explore</h3>
           <ul>
             <li><a href="about.html">Meet Nicole</a></li>
@@ -40,26 +44,25 @@
             <li><a href="mindset-mot.html#check">60-second self-check</a></li>
             <li><a href="contact.html">Contact</a></li>
           </ul>
-        </div>
+        </nav>
         <div class="footer__col">
           <h3>Follow</h3>
-          <ul>
-            <li><a href="https://www.linkedin.com/in/nicole-freeman-coaching/" target="_blank" rel="noopener">LinkedIn</a></li>
-            <li><a href="https://www.instagram.com/nicolefreemancoaching/" target="_blank" rel="noopener">Instagram</a></li>
-            <li><a href="https://www.facebook.com/nicolefreemancoach/" target="_blank" rel="noopener">Facebook</a></li>
+          <ul class="footer__social">
+            <li><a href="https://www.linkedin.com/in/nicole-freeman-coaching/" target="_blank" rel="noopener"><i>{{icon:linkedin}}</i>LinkedIn</a></li>
+            <li><a href="https://www.instagram.com/nicolefreemancoaching/" target="_blank" rel="noopener"><i>{{icon:instagram}}</i>Instagram</a></li>
+            <li><a href="https://www.facebook.com/nicolefreemancoach/" target="_blank" rel="noopener"><i>{{icon:facebook}}</i>Facebook</a></li>
           </ul>
-          <div class="socials socials--light">
-            <a href="https://www.linkedin.com/in/nicole-freeman-coaching/" target="_blank" rel="noopener" aria-label="Nicole on LinkedIn">{{icon:linkedin}}</a>
-            <a href="https://www.instagram.com/nicolefreemancoaching/" target="_blank" rel="noopener" aria-label="Nicole on Instagram">{{icon:instagram}}</a>
-            <a href="https://www.facebook.com/nicolefreemancoach/" target="_blank" rel="noopener" aria-label="Nicole on Facebook">{{icon:facebook}}</a>
-          </div>
         </div>
       </div>
-      <div class="footer__word" aria-hidden="true"><span>Nicole</span> <em>Freeman</em></div>
+
+      <div class="footer__wordwrap">
+        <p class="footer__word" aria-label="Nicole Freeman"><span class="footer__w1">Nicole</span> <em class="footer__w2">Freeman</em></p>
+      </div>
+
       <div class="footer__bar">
         <span>© <span data-year>2026</span> Nicole Freeman Coaching</span>
         <span class="footer__motto">You don't have to be perfect to be <em>amazing.</em></span>
-        <a href="#main" class="footer__top-link">Back to top {{icon:arrow-ur}}</a>
+        <a href="#main" class="footer__up" aria-label="Back to top"><span>Back to top</span><i>{{icon:arrow-up}}</i></a>
       </div>
     </div>
   </footer>

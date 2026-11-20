@@ -114,7 +114,23 @@
     })(el);
   }
   function reveals() {
-    var targets = $$("[data-split], [data-reveal], [data-stagger], [data-clip], .statement__text, .cert, .want__card--no, .berg__stage");
+    /* Footer wordmark: one span per letter, numbered for the stagger */
+    $$(".footer__word").forEach(function (word) {
+      if (word.dataset.lettersDone) return;
+      word.dataset.lettersDone = "1";
+      var i = 0;
+      $$(".footer__w1, .footer__w2", word).forEach(function (part) {
+        var text = part.textContent;
+        part.textContent = "";
+        text.split("").forEach(function (c) {
+          var s = document.createElement("span");
+          s.className = "ch"; s.textContent = c; s.setAttribute("aria-hidden", "true");
+          s.style.setProperty("--i", i++);
+          part.appendChild(s);
+        });
+      });
+    });
+    var targets = $$("[data-split], [data-reveal], [data-stagger], [data-clip], .statement__text, .cert, .want__card--no, .berg__stage, .footer__word");
     /* "That voice" lines: each is crossed out as it reaches the upper half of
        the screen, so it can be read first. */
     var lines = $$(".voice__list li");
