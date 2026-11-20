@@ -87,6 +87,46 @@
   window.addEventListener("pageshow", function (e) { if (e.persisted) closeMenu(); });
 
   /* ==========================================================================
+     INTRO + PAGE TRANSITIONS
+     Pages still load normally. On an internal link click the cover sweeps
+     up (CSS), then the browser loads the next page, which starts covered
+     and lifts away (CSS). Every step has a timer fallback, and the cover
+     never blocks clicks, so nothing can hang.
+     ========================================================================== */
+  var enterDelay = doc.classList.contains("nf-intro") ? 1700 : doc.classList.contains("nf-in") ? 550 : 0;
+  /* Tidy up the classes once the CSS animations are done (purely cosmetic) */
+  setTimeout(function () { doc.classList.remove("nf-intro", "nf-in"); }, enterDelay ? enterDelay + 1100 : 0);
+
+  var leaving = false;
+  function pageKey(path) { return (path.split("/").pop() || "index").replace(".html", "") || "index"; }
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest && e.target.closest("a[href]");
+    if (!a || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    if ((a.target && a.target !== "_self") || a.hasAttribute("download")) return;
+    var url;
+    try { url = new URL(a.href, location.href); } catch (err) { return; }
+    if (url.origin !== location.origin || !/(\.html|\/)$/.test(url.pathname)) return;
+    if (url.pathname === location.pathname) return;          /* same page: native anchor scroll */
+    if (reduced) return;
+    e.preventDefault();
+    if (leaving) return;
+    leaving = true;
+    closeMenu();
+    var title = $(".pt__title"), map = window.NF_PT || {};
+    if (title && map[pageKey(url.pathname)]) title.innerHTML = map[pageKey(url.pathname)];
+    doc.classList.remove("nf-intro", "nf-in");
+    doc.classList.add("nf-out");
+    store.set("nf_nav", "1");
+    setTimeout(function () { location.href = url.href; }, 620);
+    /* Safety: if the browser never left (cancelled, offline), uncover */
+    setTimeout(function () { doc.classList.remove("nf-out"); store.del("nf_nav"); leaving = false; }, 5000);
+  });
+  /* Back/forward restores a page from memory: make sure it isn't covered */
+  window.addEventListener("pageshow", function (e) {
+    if (e.persisted) { doc.classList.remove("nf-out", "nf-in", "nf-intro"); leaving = false; store.del("nf_nav"); }
+  });
+
+  /* ==========================================================================
      REVEALS
      One IntersectionObserver adds .is-in as things come into view. Anything
      already on screen when the page loads is marked .is-in straight away,
@@ -192,14 +232,14 @@
       }, 650);
     }
     setCount();
-    setTimeout(function () { timer = setInterval(step, 3400); }, 2400);
+    setTimeout(function () { timer = setInterval(step, 3400); }, 2400 + enterDelay);
     inView(rot, function (v) { visible = v; }, { threshold: 0 });
   }
   heroRotator();
 
   /* Hero floating card: gauge sweeps up shortly after load */
   var heroCard = $(".hero__card");
-  if (heroCard) setTimeout(function () { heroCard.classList.add("is-live"); }, 900);
+  if (heroCard) setTimeout(function () { heroCard.classList.add("is-live"); }, 900 + enterDelay);
 
   /* ---------- "Turn down the critic" fader (moves only when the visitor moves it) ---------- */
   function fader() {

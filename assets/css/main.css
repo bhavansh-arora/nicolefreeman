@@ -296,13 +296,59 @@ html { scroll-behavior: smooth; }
 html.no-scroll { overflow: hidden; }
 [id] { scroll-margin-top: 104px; }
 
-/* Native cross-fade between pages (Chrome, Edge, Safari 18.2+); the header stays put */
-@view-transition { navigation: auto; }
-.site-header { view-transition-name: site-header; }
-::view-transition-old(root) { animation: .28s ease both vtOut; }
-::view-transition-new(root) { animation: .42s cubic-bezier(.22, 1, .36, 1) both vtIn; }
-@keyframes vtOut { to { opacity: 0; } }
-@keyframes vtIn { from { opacity: 0; transform: translateY(14px); } }
+/* ---- Intro (first visit) and page transitions ----
+   Both overlays are hidden unless the <head> script switched them on, and
+   every animation ends on visibility:hidden by itself, so they can never
+   stay on screen or block the page. */
+.intro, .pt { display: none; }
+
+/* Intro: brand words, "doubt" struck out, panel lifts to reveal the page */
+html.nf-intro .intro {
+  display: block; position: fixed; left: 0; right: 0; top: 0; bottom: -64px; z-index: 130; pointer-events: none;
+  background: var(--ink); color: var(--cream); border-radius: 0 0 64px 64px; overflow: hidden;
+  animation: introLift .8s 1.55s cubic-bezier(.76, 0, .24, 1) forwards;
+}
+@keyframes introLift { to { transform: translateY(-100%); visibility: hidden; } }
+.intro__glow { position: absolute; inset: -20%; background: radial-gradient(36% 40% at 70% 60%, rgba(0, 151, 178, .4), transparent 70%), radial-gradient(28% 32% at 26% 30%, rgba(255, 79, 121, .26), transparent 70%); animation: fadeIn 1.2s ease both; }
+.intro__inner { position: absolute; left: 0; right: 0; top: 0; height: 100vh; height: 100svh; display: grid; align-content: center; justify-items: center; gap: clamp(18px, 2.4vw, 30px); padding: 0 var(--gutter); text-align: center; }
+.intro__brand { display: inline-flex; align-items: center; gap: 10px; font: 500 12px/1 var(--f-mono); letter-spacing: .16em; text-transform: uppercase; color: var(--muted-l); animation: rise .8s .05s var(--ease) both; }
+.intro__brand .mark { width: 26px; height: 26px; color: var(--cream); }
+.intro__words { margin: 0; font: 700 clamp(3.2rem, 12vw, 12rem)/.95 var(--f-display); letter-spacing: -.055em; white-space: nowrap; }
+.iw { display: inline-block; overflow: hidden; vertical-align: top; padding: 0 .05em .14em; margin: 0 -.05em -.14em; }
+.iw > span { display: inline-block; position: relative; animation: introWord .9s var(--ease) both; }
+.iw:nth-child(1) > span { animation-delay: .12s; }
+.iw:nth-child(2) > span { animation-delay: .22s; }
+.iw:nth-child(3) > span { animation-delay: .32s; }
+@keyframes introWord { from { transform: translateY(108%); } }
+.iw em { font-family: var(--f-serif); font-style: italic; font-weight: 330; color: var(--fizz); font-variation-settings: "SOFT" 100, "WONK" 1, "opsz" 144; letter-spacing: -.03em; }
+.iw--x i { position: absolute; left: -2%; right: -2%; top: 52%; height: .075em; border-radius: 99px; background: var(--aqua); transform: scaleX(0); transform-origin: left; animation: introStrike .5s .95s cubic-bezier(.65, 0, .35, 1) forwards; }
+@keyframes introStrike { to { transform: scaleX(1); } }
+.intro__line { font: 400 clamp(1rem, 1.6vw, 1.3rem)/1.3 var(--f-serif); font-style: italic; color: var(--muted-l); font-variation-settings: "SOFT" 100, "WONK" 1; animation: rise .8s .7s var(--ease) both; }
+.intro__bar { position: absolute; left: 50%; bottom: calc(64px + clamp(28px, 5vh, 52px)); width: 120px; height: 2px; margin-left: -60px; border-radius: 2px; background: var(--line-l2); overflow: hidden; }
+.intro__bar i { display: block; height: 100%; background: var(--fizz); transform: scaleX(0); transform-origin: left; animation: introStrike 1.45s .05s ease-in-out forwards; }
+
+/* Page transition: pink then ink panels sweep up with the page name */
+html.nf-in .pt, html.nf-out .pt { display: block; position: fixed; inset: 0; z-index: 125; pointer-events: none; }
+.pt__layer { position: absolute; left: 0; right: 0; top: -64px; bottom: -64px; border-radius: 64px; transform: translateY(105%); }
+.pt__layer--fizz { background: var(--fizz); }
+.pt__layer--ink { background: var(--ink); color: var(--cream); display: grid; place-items: center; }
+.pt__label { display: grid; justify-items: center; gap: 18px; text-align: center; padding: 0 24px; }
+.pt__kick { display: inline-flex; align-items: center; gap: 10px; font: 500 12px/1 var(--f-mono); letter-spacing: .14em; text-transform: uppercase; color: var(--muted-l); }
+.pt__kick .mark { width: 24px; height: 24px; color: var(--cream); }
+.pt__title { font: 700 clamp(2.6rem, 7vw, 6.4rem)/.95 var(--f-display); letter-spacing: -.05em; }
+.pt__title em { font-family: var(--f-serif); font-style: italic; font-weight: 330; color: var(--fizz); font-variation-settings: "SOFT" 100, "WONK" 1; letter-spacing: -.03em; }
+/* arriving: starts covered, then lifts away */
+html.nf-in .pt__layer { transform: none; animation: ptReveal .75s .18s cubic-bezier(.76, 0, .24, 1) forwards; }
+html.nf-in .pt__layer--fizz { animation-delay: .28s; }
+html.nf-in .pt__label { animation: ptLabelOut .35s .08s ease forwards; }
+@keyframes ptReveal { to { transform: translateY(-105%); visibility: hidden; } }
+@keyframes ptLabelOut { to { opacity: 0; transform: translateY(-20px); } }
+/* leaving: panels rise to cover, the destination's name fades in */
+html.nf-out .pt__layer { transform: translateY(105%); animation: ptCover .55s cubic-bezier(.76, 0, .24, 1) forwards; visibility: visible; }
+html.nf-out .pt__layer--ink { animation-delay: .07s; }
+html.nf-out .pt__label { animation: rise .45s .3s var(--ease) both; }
+@keyframes ptCover { to { transform: none; } }
+html.nf-in, html.nf-out, html.nf-intro { background-color: var(--ink); }
 
 /* Entrance keyframes. Only "from" states: each element ends on its own styles. */
 @keyframes rise { from { opacity: 0; transform: translateY(26px); } }
@@ -1413,3 +1459,25 @@ fieldset.wstep { border: 0; padding: 0; margin-inline: 0; min-width: 0; }
 @media (min-width: 901px) { .stick { position: sticky; top: 120px; } }
 @media (max-width: 760px) { .check__perks { display: none; } .check__tip { margin-left: 0; } }
 .check__panes { align-items: center; }
+
+/* ---------- Entrances wait for the intro or page reveal ---------- */
+html.nf-intro { --enter: 1.7s; }
+html.nf-in { --enter: .55s; }
+.hero__dial { animation-delay: var(--enter, 0s); }
+.hero__portrait { animation-delay: calc(var(--enter, 0s) + .05s); }
+.hero__eyebrow { animation-delay: calc(var(--enter, 0s) + .12s); }
+.hero__title .ln:first-child { animation-delay: calc(var(--enter, 0s) + .18s); }
+.hero__title .ln + .ln { animation-delay: calc(var(--enter, 0s) + .28s); }
+.hero__bottom > * { animation-delay: calc(var(--enter, 0s) + .42s); }
+.hero__bottom > * + * { animation-delay: calc(var(--enter, 0s) + .5s); }
+.hero__card { animation-delay: calc(var(--enter, 0s) + .62s); }
+.sticker--1 { animation-delay: calc(var(--enter, 0s) + .8s); }
+.sticker--2 { animation-delay: calc(var(--enter, 0s) + .9s); }
+.sticker--3 { animation-delay: calc(var(--enter, 0s) + 1s); }
+.page-hero__crumbs { animation-delay: calc(var(--enter, 0s) + .08s); }
+.page-hero__title { animation-delay: calc(var(--enter, 0s) + .14s); }
+.page-hero__lead { animation-delay: calc(var(--enter, 0s) + .26s); }
+.page-hero__actions { animation-delay: calc(var(--enter, 0s) + .34s); }
+.page-hero__media { animation-delay: calc(var(--enter, 0s) + .22s); }
+.page-hero__bottom { animation-delay: calc(var(--enter, 0s) + .5s); }
+@media (prefers-reduced-motion: reduce) { .intro, .pt { display: none !important; } }
