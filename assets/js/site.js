@@ -170,7 +170,7 @@
         });
       });
     });
-    var targets = $$("[data-split], [data-reveal], [data-stagger], [data-clip], .statement__text, .cert, .want__card--no, .berg__stage, .footer__word");
+    var targets = $$("[data-split], [data-reveal], [data-stagger], [data-clip], .statement__text, .cert, .want__card--no, .berg__stage, .footer__word, [data-draw]");
     /* "That voice" lines: each is crossed out as it reaches the upper half of
        the screen, so it can be read first. */
     var lines = $$(".voice__list li");

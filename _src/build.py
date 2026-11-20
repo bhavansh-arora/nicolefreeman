@@ -78,9 +78,30 @@ MARK = ('<svg class="mark" viewBox="0 0 40 40" aria-hidden="true">'
         '<path class="mark__tri" d="M10.5 20 27.5 10.2v19.6z"/></svg>')
 
 
+# Hand-drawn marks: {{hand:name}}. Each path has pathLength="1" so CSS can
+# "draw" it in with stroke-dashoffset. Stretch to fit (preserveAspectRatio none).
+_H = 'class="hand hand--{n}" viewBox="{vb}" preserveAspectRatio="none" aria-hidden="true" focusable="false"'
+_P = 'pathLength="1"'
+HANDS = {
+    "circle": ("0 0 200 80", f'<path {_P} d="M22 50C12 26 56 9 106 9c54 0 90 14 88 33-2 20-44 31-94 31C50 73 9 64 9 44 9 28 34 16 70 12"/>'),
+    "underline": ("0 0 200 24", f'<path {_P} d="M4 15C52 7 116 5 196 11"/><path {_P} d="M34 21c46-5 96-6 140-4"/>'),
+    "swoosh": ("0 0 200 30", f'<path {_P} d="M3 22C40 6 92 4 132 10c26 4 46 10 64 4"/>'),
+    "arrow": ("0 0 120 80", f'<path {_P} d="M8 70C22 34 54 14 104 14"/><path {_P} d="M88 3l17 11-15 14"/>'),
+    "arrow-down": ("0 0 80 120", f'<path {_P} d="M58 6C20 22 14 60 34 104"/><path {_P} d="M20 92l14 14 13-17"/>'),
+    "arrow-left": ("0 0 120 80", f'<path {_P} d="M112 64C96 30 64 14 16 18"/><path {_P} d="M30 6 15 18l14 13"/>'),
+    "spark": ("0 0 40 40", f'<path {_P} d="M20 3v34"/><path {_P} d="M3 20h34"/><path {_P} d="M8 8l24 24"/><path {_P} d="M32 8 8 32"/>'),
+}
+
+
+def hand(name):
+    vb, paths = HANDS[name]
+    return f'<svg {_H.format(n=name, vb=vb)}>{paths}</svg>'
+
+
 def render(text, meta, depth=0):
     if depth > 8:
         raise RuntimeError("include depth exceeded")
+    text = re.sub(r"\{\{hand:([\w-]+)\}\}", lambda m: hand(m.group(1)), text)
 
     def inc(m):
         name = m.group(1).strip()

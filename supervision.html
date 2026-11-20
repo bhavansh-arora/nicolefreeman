@@ -31,8 +31,9 @@
   <link rel="preload" href="assets/fonts/schibsted-grotesk-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/fraunces-italic.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/geist-mono-normal.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="assets/css/fonts.css?v=45e65c94">
-  <link rel="stylesheet" href="assets/css/main.css?v=e3c554da">
+  <link rel="preload" href="assets/fonts/caveat-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="assets/css/fonts.css?v=ca27fca8">
+  <link rel="stylesheet" href="assets/css/main.css?v=0f98af6a">
   <script>
     /* Runs before anything is drawn. First visit this session: brand intro.
        Arriving from a link on this site: the page-transition reveal.
@@ -165,6 +166,7 @@
           <div class="page-hero__media">
             <div class="page-hero__photo" style="--r:2deg"><img decoding="async" src="assets/img/nicole-speaking.webp" alt="Nicole presenting to a room of people" width="768" height="1024" fetchpriority="high"></div>
             <div class="float-card" style="--r:-3deg;left:-34px;bottom:40px"><span class="float-card__ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8"/></svg></span><span><b>EMCC accredited</b><small>Coach supervisor (ESIA)</small></span></div>
+            <p class="note ph-note" style="right:-6%;top:-6%;rotate:5deg">coaches need coaches too</p>
           </div>
         </div>
         <div class="page-hero__bottom">
@@ -176,7 +178,7 @@
 
     <section class="sec" id="supervision">
       <div class="container">
-        <div class="sec-head"><span><b>(01)</b> Coach supervision</span><span>EMCC accredited</span></div>
+        <div class="sec-head"><span><b>01</b> Coach supervision</span><span>EMCC accredited</span></div>
         <div class="split" style="align-items:start">
           <div class="stick">
             <h2 class="h2" data-split>A thinking partner <em>for coaches.</em></h2>
@@ -198,9 +200,9 @@
 
     <section class="panel panel--sand sec" id="teams">
       <div class="container">
-        <div class="sec-head"><span><b>(02)</b> For organisations</span><span>Coaching · talks · workshops</span></div>
+        <div class="sec-head"><span><b>02</b> For organisations</span><span>Coaching · talks · workshops</span></div>
         <div class="sec-title">
-          <h2 class="h2" data-split>Talks and workshops <em>that land.</em></h2>
+          <h2 class="h2" data-split data-draw>Talks and workshops <span class="hm"><em>that land.</em><svg class="hand hand--swoosh" viewBox="0 0 200 30" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path pathLength="1" d="M3 22C40 6 92 4 132 10c26 4 46 10 64 4"/></svg></span></h2>
           <p class="lead" data-reveal>High performers are often the hardest on themselves. I help teams and leaders quieten the critic, get unstuck and do their best work, with sessions that are practical, honest and genuinely fun.</p>
         </div>
         <p class="mono muted" data-reveal style="margin-bottom:18px">Past clients include</p>
@@ -231,7 +233,7 @@
 
     <section class="sec">
       <div class="container">
-        <div class="sec-head"><span><b>(03)</b> On stage</span><span>Panels, talks, rooms full of people</span></div>
+        <div class="sec-head"><span><b>03</b> On stage</span><span>Panels, talks, rooms full of people</span></div>
         <div class="gallery">
           <figure data-clip><img decoding="async" src="assets/img/nicole-panel.webp" srcset="assets/img/nicole-panel-800.webp 800w, assets/img/nicole-panel-1200.webp 1200w, assets/img/nicole-panel.webp 2000w" sizes="(max-width: 760px) 92vw, 46vw" alt="Nicole speaking on a panel" width="2000" height="1333" loading="lazy"><figcaption class="media__cap"><span>Panel discussion</span></figcaption></figure>
           <figure data-clip><img decoding="async" src="assets/img/nicole-speaking.webp" alt="Nicole presenting at the front of a lecture room" width="768" height="1024" loading="lazy"><figcaption class="media__cap"><span>Workshop</span></figcaption></figure>
@@ -252,7 +254,8 @@
           <h2 class="cta-final__title" data-split>Your mind deserves <em>a service too.</em></h2>
           <div class="cta-final__row">
             <p class="cta-final__lead">Book a complimentary Mindset MOT. In an hour together I'll show you where you're stuck, and you'll leave with an insight, tip or tool to move you forward. No pressure. Just a fresh sense of possibility.</p>
-            <div class="cta-final__actions">
+            <div class="cta-final__actions" data-draw>
+              <p class="note cta-final__note">it's free, by the way <svg class="hand hand--arrow-down" viewBox="0 0 80 120" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path pathLength="1" d="M58 6C20 22 14 60 34 104"/><path pathLength="1" d="M20 92l14 14 13-17"/></svg></p>
               <a class="btn btn--ink btn--lg" href="mindset-mot.html#book" data-book><span class="btn__label">Book your free MOT</span><span class="btn__icon"><svg class="i-ur" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></span></a>
               <a class="btn btn--ghost-ink btn--lg" href="contact.html"><span class="btn__label">Send a message</span><span class="btn__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a>
             </div>
@@ -341,6 +344,6 @@
 
 
   <script src="assets/js/config.js?v=595e6c25" defer></script>
-  <script src="assets/js/site.js?v=b4bd1d4f" defer></script>
+  <script src="assets/js/site.js?v=cf4ebeef" defer></script>
 </body>
 </html>

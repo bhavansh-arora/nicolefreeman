@@ -31,8 +31,9 @@
   <link rel="preload" href="assets/fonts/schibsted-grotesk-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/fraunces-italic.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/geist-mono-normal.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="assets/css/fonts.css?v=45e65c94">
-  <link rel="stylesheet" href="assets/css/main.css?v=e3c554da">
+  <link rel="preload" href="assets/fonts/caveat-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="assets/css/fonts.css?v=ca27fca8">
+  <link rel="stylesheet" href="assets/css/main.css?v=0f98af6a">
   <script>
     /* Runs before anything is drawn. First visit this session: brand intro.
        Arriving from a link on this site: the page-transition reveal.
@@ -170,6 +171,7 @@
             </div>
             <img decoding="async" class="kwh__face kwh__face--a" src="assets/img/people/phil-whitaker.webp" alt="" width="320" height="320" style="--r:4deg">
             <img decoding="async" class="kwh__face kwh__face--b" src="assets/img/people/damian-cox.webp" alt="" width="320" height="320" style="--r:-6deg">
+            <p class="note note--fizz ph-note" style="left:4%;top:-2%;rotate:-5deg">their words, not mine</p>
             <span class="kwh__chip" style="--r:5deg"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2.5 2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg> Unerringly perceptive</span>
           </div>
         </div>
@@ -182,7 +184,7 @@
 
     <section class="sec" id="stories">
       <div class="container">
-        <div class="sec-head"><span><b>(01)</b> In their words</span><span>Unedited</span></div>
+        <div class="sec-head"><span><b>01</b> In their words</span><span>Unedited</span></div>
         <article class="kw" data-reveal>
           <div class="kw__who"><img decoding="async" src="assets/img/people/phil-whitaker.webp" alt="Phil Whitaker" width="320" height="320" loading="lazy"><div><b>Phil Whitaker</b><small>Writer, medical practitioner and commentator</small></div></div>
           <div class="kw__quote">
@@ -213,7 +215,7 @@
 
     <section class="panel panel--ink grain sec" data-theme="dark">
       <div class="container">
-        <div class="sec-head"><span><b>(02)</b> Words that keep coming up</span><span>Pulled from client feedback</span></div>
+        <div class="sec-head"><span><b>02</b> Words that keep coming up</span><span>Pulled from client feedback</span></div>
         <div class="wall" data-stagger>
           <span class="wall__item"><em>Unerringly</em> perceptive</span>
           <span class="wall__item">My own personal non-exec</span>
@@ -230,9 +232,9 @@
 
     <section class="sec" id="outcomes">
       <div class="container">
-        <div class="sec-head"><span><b>(03)</b> What changed</span><span>Real outcomes</span></div>
+        <div class="sec-head"><span><b>03</b> What changed</span><span>Real outcomes</span></div>
         <div class="sec-title">
-          <h2 class="h2" data-split>Less critic. <em>More you.</em></h2>
+          <h2 class="h2" data-split data-draw>Less critic. <span class="hm"><em>More you.</em><svg class="hand hand--circle" viewBox="0 0 200 80" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path pathLength="1" d="M22 50C12 26 56 9 106 9c54 0 90 14 88 33-2 20-44 31-94 31C50 73 9 64 9 44 9 28 34 16 70 12"/></svg></span></h2>
           <p class="lead" data-reveal>Every client's journey is different. These are the shifts they described in their own words.</p>
         </div>
         <div class="outcomes" data-stagger>
@@ -256,7 +258,8 @@
           <h2 class="cta-final__title" data-split>Your mind deserves <em>a service too.</em></h2>
           <div class="cta-final__row">
             <p class="cta-final__lead">Book a complimentary Mindset MOT. In an hour together I'll show you where you're stuck, and you'll leave with an insight, tip or tool to move you forward. No pressure. Just a fresh sense of possibility.</p>
-            <div class="cta-final__actions">
+            <div class="cta-final__actions" data-draw>
+              <p class="note cta-final__note">it's free, by the way <svg class="hand hand--arrow-down" viewBox="0 0 80 120" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path pathLength="1" d="M58 6C20 22 14 60 34 104"/><path pathLength="1" d="M20 92l14 14 13-17"/></svg></p>
               <a class="btn btn--ink btn--lg" href="mindset-mot.html#book" data-book><span class="btn__label">Book your free MOT</span><span class="btn__icon"><svg class="i-ur" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></span></a>
               <a class="btn btn--ghost-ink btn--lg" href="contact.html"><span class="btn__label">Send a message</span><span class="btn__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a>
             </div>
@@ -345,6 +348,6 @@
 
 
   <script src="assets/js/config.js?v=595e6c25" defer></script>
-  <script src="assets/js/site.js?v=b4bd1d4f" defer></script>
+  <script src="assets/js/site.js?v=cf4ebeef" defer></script>
 </body>
 </html>

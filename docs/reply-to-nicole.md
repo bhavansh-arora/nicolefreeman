@@ -50,5 +50,6 @@ Code Bunny
 - **Inside the hour.** The Mindset MOT breakdown (about 10, 20, 20 and 10 minutes) is our reading of her own description. Adjust in `_src/pages/mindset-mot.html`.
 - **Reply time.** The site promises a reply "within one working day". Change `replyPromise` in `assets/js/config.js` and the "Quick replies" card on the contact page if that's not right.
 - **Drafted copy to confirm:** the FAQ answers (hypnotherapy, DISC, coaching vs therapy), the six talk themes on the supervision page, and the "Turn down the critic" lines on the homepage.
+- **Handwritten notes are our words in her voice:** the rewrites under the crossed-out critic lines ("Unstuck. Calm. Moving.", "Off duty. Zero guilt." and so on), the photo notes ("ex chartered accountant", "recovering perfectionist", "cake approved by Mary Berry", "mum, baker, early jogger"), and the hero notes ("the kettle's on", "zero pressure. promise.", "coaches need coaches too"). Easy to change in `_src/pages/`.
 - **Photo captions** are kept general ("Awards night", "Panel discussion", "Certified hypnotherapist").
 - **Enquiries.** Add a form endpoint (`formEndpoint` in `assets/js/config.js`, e.g. Formspree or a Make/Zapier webhook) for an automatic confirmation email and a CRM or sheet entry. Until then, enquiries open a pre-filled email to nicole@nicolefreeman.co.uk.

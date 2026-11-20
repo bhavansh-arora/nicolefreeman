@@ -16,9 +16,17 @@
               <a class="btn btn--ghost btn--lg" href="#fun"><span class="btn__label">The fun stuff</span><span class="btn__icon">{{icon:arrow-down}}</span></a>
             </div>
           </div>
-          <div class="page-hero__media">
-            <div class="page-hero__photo" style="--r:2deg"><img src="assets/img/nicole-portrait.webp" alt="Nicole Freeman smiling in a teal top" width="1200" height="1492" fetchpriority="high"></div>
-            <div class="float-card" style="--r:-4deg;left:-36px;bottom:42px"><span class="float-card__ico">{{icon:party}}</span><span><b>Recovering perfectionist</b><small>Coach, hypnotherapist, ACA</small></span></div>
+          <div class="page-hero__media cutout-wrap">
+            <div class="cutout">
+              <div class="cutout__ring" aria-hidden="true"></div>
+              <div class="cutout__blob" aria-hidden="true"></div>
+              <img class="cutout__img" src="assets/img/nicole-cut.webp" alt="Nicole Freeman smiling in a teal top" width="1101" height="1570" fetchpriority="high">
+            </div>
+            <div class="cutout__notes" aria-hidden="true">
+              <p class="note ph-note">recovering<br>perfectionist {{hand:arrow}}</p>
+              <p class="note note--fizz ph-note">ex-FD &amp;<br>chartered accountant {{hand:arrow}}</p>
+              <p class="note ph-note">mum, baker,<br>early jogger {{hand:arrow}}</p>
+            </div>
           </div>
         </div>
         <div class="page-hero__bottom">
@@ -30,7 +38,7 @@
 
     <section class="sec" id="story">
       <div class="container">
-        <div class="sec-head"><span><b>(01)</b> Because you're worth it</span><span>My story</span></div>
+        <div class="sec-head"><span><b>01</b> Because you're worth it</span><span>My story</span></div>
         <div class="statement">
           <p class="statement__text">I always loved that L'Oréal ad, &ldquo;because you're worth it.&rdquo; But for many years, I felt I <em>wasn't</em> worth it. I put myself down. I prioritised everyone else's needs over my own. I was my own harshest critic, and nothing I did was ever good enough.</p>
         </div>
@@ -56,9 +64,9 @@
 
     <section class="sec" id="hats">
       <div class="container">
-        <div class="sec-head"><span><b>(02)</b> The CV stuff</span><span>I've worn many hats</span></div>
+        <div class="sec-head"><span><b>02</b> The CV stuff</span><span>I've worn many hats</span></div>
         <div class="sec-title">
-          <h2 class="h2" data-split>High achiever, <em>I see you.</em></h2>
+          <h2 class="h2" data-split data-draw>High achiever, <span class="hm"><em>I see you.</em>{{hand:underline}}</span></h2>
           <p class="lead" data-reveal>Before coaching I spent years in finance and business, so I know first hand the pressure high achievers put on themselves. It's why my clients include FDs, NEDs, writers, doctors and leaders.</p>
         </div>
         <div class="hats" data-stagger>
@@ -76,7 +84,7 @@
 
     <section class="panel panel--sand sec" id="qualifications">
       <div class="container">
-        <div class="sec-head"><span><b>(03)</b> Qualifications</span><span>Some of them, anyway</span></div>
+        <div class="sec-head"><span><b>03</b> Qualifications</span><span>Some of them, anyway</span></div>
         <div class="quals">
           <div>
             <h2 class="h2" data-split>Serious training. <em>Fun sessions.</em></h2>
@@ -110,10 +118,10 @@
 
     <section class="sec" id="fun">
       <div class="container">
-        <div class="sec-head"><span><b>(04)</b> The fun stuff</span><span>Tap the card</span></div>
+        <div class="sec-head"><span><b>04</b> The fun stuff</span><span>Tap the card</span></div>
         <div class="deck__wrap">
           <div>
-            <h2 class="h2" data-split>Ten things you <em>didn't</em> need to know.</h2>
+            <h2 class="h2" data-split data-draw>Ten things you <span class="hm"><em>didn't</em>{{hand:circle}}</span> need to know.</h2>
             <p class="lead" data-reveal style="margin-top:22px;max-width:28em">Coaching works best when you actually like the person you're talking to. So here's a little more of me. Tap, swipe or shuffle.</p>
             <div class="deck__controls" data-reveal>
               <button class="icon-btn" type="button" data-deck-next aria-label="Next fact">{{icon:arrow}}</button>
@@ -139,7 +147,7 @@
 
     <section class="sec sec--flush-top" id="moments">
       <div class="container">
-        <div class="sec-head"><span><b>(05)</b> Out and about</span><span>Talks, panels, milestones</span></div>
+        <div class="sec-head"><span><b>05</b> Out and about</span><span>Talks, panels, milestones</span></div>
         <div class="gallery">
           <figure data-clip><img src="assets/img/nicole-panel.webp" alt="Nicole speaking into a microphone on a panel" width="2000" height="1333" loading="lazy"><figcaption class="media__cap"><span>On the panel</span><span>Speaking</span></figcaption></figure>
           <figure data-clip><img src="assets/img/nicole-rtt.webp" alt="Nicole holding her hypnotherapy certificate" width="1200" height="1600" loading="lazy"><figcaption class="media__cap"><span>Certified hypnotherapist</span></figcaption></figure>
